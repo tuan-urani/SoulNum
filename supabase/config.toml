@@ -1,0 +1,23 @@
+project_id = "aauidavuipscnbmdhale"
+
+[functions.fn_get_or_generate_reading]
+verify_jwt = true
+
+[functions.fn_chat_with_guide]
+verify_jwt = true
+
+[functions.fn_unlock_daily_biorhythm]
+verify_jwt = true
+
+[functions.fn_sync_subscription]
+verify_jwt = true
+
+[functions.fn_delete_profile_permanently]
+verify_jwt = true
+
+[functions.fn_get_history_feed]
+verify_jwt = true
+
+[functions.fn_compact_context_memory]
+verify_jwt = false
+
