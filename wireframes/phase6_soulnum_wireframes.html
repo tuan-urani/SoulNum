@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SoulNum - Wireframe Giai đoạn 6</title>
+    <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        margin: 24px;
+      }
+      h1, h2, h3, p {
+        margin: 0;
+      }
+      .intro {
+        margin-bottom: 16px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(390px, 1fr));
+        gap: 24px;
+      }
+      .screen {
+        width: 390px;
+        min-height: 844px;
+        border: 1px solid;
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .screen-title {
+        border: 1px solid;
+        padding: 8px;
+      }
+      .top-row {
+        display: flex;
+        gap: 8px;
+      }
+      .box {
+        border: 1px solid;
+        padding: 8px;
+      }
+      .box.small { min-height: 34px; }
+      .box.medium { min-height: 64px; }
+      .box.large { min-height: 120px; }
+      .box.xlarge { min-height: 180px; }
+      .stack { display: flex; flex-direction: column; gap: 8px; }
+      .row { display: flex; gap: 8px; }
+      .row > .box { flex: 1; }
+      .footer-actions {
+        margin-top: auto;
+        display: flex;
+        gap: 8px;
+      }
+      .footer-actions .box {
+        flex: 1;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="intro">
+      <h1>SoulNum - Wireframe độ trung thực thấp giai đoạn 6</h1>
+      <p>Phạm vi: F1 Kích hoạt, F2 Chu kỳ sinh học + khóa quảng cáo, F3 Nhiều hồ sơ + tương hợp, F4 Nâng cấp VIP, F5 AI chatbot giới hạn cứng, F6 Xóa hồ sơ.</p>
+    </div>
+
+    <div class="grid">
+      <section class="screen" aria-label="S1">
+        <div class="screen-title"><h2>S1 - Mở lần đầu / Thiết lập hồ sơ (F1)</h2></div>
+        <div class="box medium">Giới thiệu ứng dụng / Tóm tắt giá trị</div>
+        <div class="box small">Nhập: Họ và tên</div>
+        <div class="box small">Nhập: Ngày sinh</div>
+        <div class="box small">Khu vực thông báo kiểm tra dữ liệu</div>
+        <div class="footer-actions">
+          <div class="box">Hủy</div>
+          <div class="box">Tạo hồ sơ</div>
+        </div>
+      </section>
+
+      <section class="screen" aria-label="S2">
+        <div class="screen-title"><h2>S2 - Trang chủ / Trung tâm phân tích miễn phí (F1)</h2></div>
+        <div class="box medium">Tóm tắt hồ sơ đang dùng</div>
+        <div class="box medium">Thẻ con số cốt lõi</div>
+        <div class="box medium">Thẻ ma trận tâm lý</div>
+        <div class="row">
+          <div class="box medium">Biểu đồ ngày sinh</div>
+          <div class="box medium">Năng lượng gia tăng</div>
+        </div>
+        <div class="row">
+          <div class="box medium">4 đỉnh cao</div>
+          <div class="box medium">4 thử thách</div>
+        </div>
+        <div class="row">
+          <div class="box medium">Chu kỳ sinh học</div>
+          <div class="box medium">Dự đoán Ngày/Tháng/Năm</div>
+        </div>
+        <div class="box small">Nút mở AI Chatbot (VIP)</div>
+      </section>
+
+      <section class="screen" aria-label="S3">
+        <div class="screen-title"><h2>S3 - Chi tiết phân tích (F1)</h2></div>
+        <div class="box small">Bộ chọn mô-đun</div>
+        <div class="box xlarge">Khối nội dung kết quả cá nhân hóa</div>
+        <div class="box large">Các phần diễn giải</div>
+        <div class="box medium">Liên kết nhanh mô-đun liên quan</div>
+        <div class="footer-actions">
+          <div class="box">Quay lại</div>
+          <div class="box">Mô-đun tiếp theo</div>
+        </div>
+      </section>
+
+      <section class="screen" aria-label="S4">
+        <div class="screen-title"><h2>S4 - Chu kỳ sinh học bị khóa (Free, F2)</h2></div>
+        <div class="box medium">Hôm nay + Ngữ cảnh hồ sơ đang dùng</div>
+        <div class="box xlarge">Xem trước chu kỳ sinh học khi bị khóa</div>
+        <div class="box medium">Giải thích yêu cầu xem quảng cáo thưởng</div>
+        <div class="footer-actions">
+          <div class="box">Để sau</div>
+          <div class="box">Xem quảng cáo để mở</div>
+        </div>
+      </section>
+
+      <section class="screen" aria-label="S5">
+        <div class="screen-title"><h2>S5 - Chu kỳ sinh học đã mở (F2)</h2></div>
+        <div class="box medium">Trạng thái mở khóa thành công (chỉ hôm nay)</div>
+        <div class="box large">Khối chu kỳ thể chất</div>
+        <div class="box large">Khối chu kỳ cảm xúc</div>
+        <div class="box large">Khối chu kỳ trí tuệ</div>
+        <div class="box medium">Tóm tắt gợi ý trong ngày</div>
+      </section>
+
+      <section class="screen" aria-label="S6">
+        <div class="screen-title"><h2>S6 - Quản lý hồ sơ (F3)</h2></div>
+        <div class="box medium">Thẻ hồ sơ đang dùng</div>
+        <div class="box medium">Thẻ hồ sơ đã lưu #2</div>
+        <div class="box medium">Ô thêm hồ sơ</div>
+        <div class="box small">Ghi chú giới hạn (Free: 2, VIP: Không giới hạn)</div>
+        <div class="footer-actions">
+          <div class="box">Quản lý</div>
+          <div class="box">Thêm hồ sơ</div>
+        </div>
+      </section>
+
+      <section class="screen" aria-label="S7">
+        <div class="screen-title"><h2>S7 - Form thêm hồ sơ (F3)</h2></div>
+        <div class="box small">Nhập: Họ và tên</div>
+        <div class="box small">Nhập: Ngày sinh</div>
+        <div class="box small">Khu vực trạng thái kiểm tra dữ liệu</div>
+        <div class="box medium">Thông báo chạm giới hạn (điều kiện)</div>
+        <div class="footer-actions">
+          <div class="box">Hủy</div>
+          <div class="box">Lưu hồ sơ</div>
+        </div>
+      </section>
+
+      <section class="screen" aria-label="S8">
+        <div class="screen-title"><h2>S8 - Luồng tương hợp (F3)</h2></div>
+        <div class="box small">Chọn hồ sơ A</div>
+        <div class="box small">Chọn hồ sơ B</div>
+        <div class="box small">Khu vực kiểm tra trường bắt buộc</div>
+        <div class="box">Chạy phân tích tương hợp</div>
+        <div class="box xlarge">Kết quả tương hợp và diễn giải</div>
+      </section>
+
+      <section class="screen" aria-label="S9">
+        <div class="screen-title"><h2>S9 - Nâng cấp VIP (F4)</h2></div>
+        <div class="box medium">Lý do nâng cấp: Chatbot + Không giới hạn hồ sơ + Mở chu kỳ hằng ngày không quảng cáo</div>
+        <div class="row">
+          <div class="box large">Gói tháng</div>
+          <div class="box large">Gói năm</div>
+        </div>
+        <div class="box medium">Khu vực trạng thái thanh toán (thành công/chờ/thất bại)</div>
+        <div class="footer-actions">
+          <div class="box">Không nâng cấp</div>
+          <div class="box">Tiếp tục thanh toán</div>
+        </div>
+      </section>
+
+      <section class="screen" aria-label="S10">
+        <div class="screen-title"><h2>S10 - AI Chatbot đang hoạt động (F5)</h2></div>
+        <div class="box small">Ngữ cảnh hồ sơ đang dùng</div>
+        <div class="box small">Hạn mức còn lại trong tháng</div>
+        <div class="box xlarge">Khu vực hội thoại</div>
+        <div class="row">
+          <div class="box medium">Nhập tin nhắn</div>
+          <div class="box medium">Gửi</div>
+        </div>
+      </section>
+
+      <section class="screen" aria-label="S11">
+        <div class="screen-title"><h2>S11 - AI Chatbot hết quota (F5)</h2></div>
+        <div class="box small">Hạn mức còn lại: 0</div>
+        <div class="box medium">Trạng thái đã chạm giới hạn cứng</div>
+        <div class="box large">Lịch sử hội thoại chỉ đọc</div>
+        <div class="box medium">Thông tin thời điểm reset kỳ tiếp theo</div>
+      </section>
+
+      <section class="screen" aria-label="S12">
+        <div class="screen-title"><h2>S12 - Xác nhận xóa hồ sơ (F6)</h2></div>
+        <div class="box medium">Tóm tắt chi tiết hồ sơ</div>
+        <div class="box large">Cảnh báo xóa không thể hoàn tác + ảnh hưởng dữ liệu</div>
+        <div class="footer-actions">
+          <div class="box">Hủy</div>
+          <div class="box">Xóa vĩnh viễn</div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>

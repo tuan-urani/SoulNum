@@ -1,0 +1,732 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SoulNum - UI High Fidelity Giai đoạn 7</title>
+    <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+    <style>
+      :root {
+        --bg-void: #070913;
+        --bg-midnight: #0d1122;
+        --bg-indigo: #141a31;
+        --surface-1: #161c33;
+        --surface-2: #1a2140;
+        --surface-3: #212a4d;
+        --line-soft: rgba(173, 191, 255, 0.2);
+        --line-strong: rgba(203, 178, 122, 0.48);
+        --text-primary: #f2f4ff;
+        --text-secondary: #b9c1e4;
+        --text-muted: #8f98bf;
+        --accent-gold: #c8ae6c;
+        --accent-violet: #8f7be2;
+        --accent-blue: #6aa8d4;
+        --state-danger: #bf6666;
+        --state-success: #73b48d;
+        --shadow-soft: 0 10px 28px rgba(0, 0, 0, 0.35);
+        --shadow-glow-violet: 0 0 0 1px rgba(143, 123, 226, 0.35), 0 0 24px rgba(143, 123, 226, 0.18);
+        --shadow-glow-gold: 0 0 0 1px rgba(200, 174, 108, 0.4), 0 0 24px rgba(200, 174, 108, 0.14);
+        --radius-xs: 8px;
+        --radius-sm: 12px;
+        --radius-md: 16px;
+        --radius-lg: 20px;
+        --space-1: 8px;
+        --space-2: 16px;
+        --space-3: 24px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 32px;
+        font-family: "Inter", "Segoe UI", Arial, sans-serif;
+        color: var(--text-primary);
+        background:
+          radial-gradient(1200px 800px at 12% -8%, rgba(143, 123, 226, 0.18) 0%, rgba(143, 123, 226, 0) 55%),
+          radial-gradient(1000px 700px at 96% 14%, rgba(106, 168, 212, 0.18) 0%, rgba(106, 168, 212, 0) 58%),
+          radial-gradient(900px 650px at 52% 92%, rgba(200, 174, 108, 0.08) 0%, rgba(200, 174, 108, 0) 56%),
+          linear-gradient(160deg, var(--bg-void) 0%, #090d1c 48%, var(--bg-midnight) 100%);
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      .headline {
+        font-family: "Cormorant Garamond", "Times New Roman", serif;
+        letter-spacing: 0.2px;
+      }
+
+      .board {
+        width: 1960px;
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+      }
+
+      .intro {
+        padding: 24px;
+        border: 1px solid var(--line-soft);
+        border-radius: var(--radius-lg);
+        background: linear-gradient(145deg, rgba(22, 28, 51, 0.9), rgba(15, 19, 36, 0.86));
+        box-shadow: var(--shadow-soft);
+      }
+
+      .intro h1 {
+        font-size: 44px;
+        line-height: 1.12;
+        font-weight: 600;
+      }
+
+      .intro p {
+        margin-top: 12px;
+        font-size: 15px;
+        line-height: 1.6;
+        color: var(--text-secondary);
+      }
+
+      .panel {
+        border: 1px solid var(--line-soft);
+        border-radius: var(--radius-lg);
+        background: linear-gradient(148deg, rgba(21, 27, 49, 0.94), rgba(12, 17, 32, 0.9));
+        box-shadow: var(--shadow-soft);
+        padding: 24px;
+      }
+
+      .panel-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+
+      .panel-title h2 {
+        font-size: 30px;
+        line-height: 1.15;
+        font-weight: 600;
+      }
+
+      .tag {
+        border-radius: 999px;
+        border: 1px solid var(--line-strong);
+        color: var(--accent-gold);
+        padding: 6px 12px;
+        font-size: 12px;
+        letter-spacing: 0.4px;
+      }
+
+      .system-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .token-card,
+      .component-card {
+        border-radius: var(--radius-md);
+        border: 1px solid rgba(160, 177, 237, 0.22);
+        background: linear-gradient(160deg, rgba(26, 33, 64, 0.98), rgba(15, 21, 41, 0.95));
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .token-title {
+        font-size: 13px;
+        color: var(--text-secondary);
+        letter-spacing: 0.2px;
+      }
+
+      .color-row,
+      .type-row,
+      .radius-row,
+      .space-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .swatch {
+        width: 22px;
+        height: 22px;
+        border-radius: 6px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .mini-note {
+        font-size: 12px;
+        line-height: 1.45;
+        color: var(--text-muted);
+      }
+
+      .components-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 16px;
+      }
+
+      .state-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        min-width: 150px;
+        height: 44px;
+        border-radius: 12px;
+        padding: 0 16px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid;
+        font-size: 14px;
+      }
+
+      .btn.primary {
+        background: linear-gradient(130deg, rgba(143, 123, 226, 0.28), rgba(106, 168, 212, 0.22));
+        border-color: rgba(171, 186, 245, 0.35);
+        color: var(--text-primary);
+      }
+
+      .btn.primary.pressed {
+        background: linear-gradient(130deg, rgba(143, 123, 226, 0.42), rgba(106, 168, 212, 0.35));
+        border-color: rgba(193, 205, 255, 0.55);
+        box-shadow: var(--shadow-glow-violet);
+      }
+
+      .btn.primary.disabled {
+        opacity: 0.42;
+      }
+
+      .btn.secondary {
+        background: rgba(200, 174, 108, 0.1);
+        border-color: rgba(200, 174, 108, 0.4);
+        color: var(--accent-gold);
+      }
+
+      .btn.loading::after {
+        content: " •••";
+        letter-spacing: 2px;
+      }
+
+      .input {
+        height: 48px;
+        border-radius: 12px;
+        padding: 0 14px;
+        border: 1px solid rgba(160, 177, 237, 0.32);
+        background: rgba(20, 26, 48, 0.95);
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+      }
+
+      .input.focus {
+        border-color: rgba(143, 123, 226, 0.8);
+        box-shadow: var(--shadow-glow-violet);
+      }
+
+      .input.disabled {
+        opacity: 0.45;
+      }
+
+      .card {
+        border-radius: var(--radius-md);
+        border: 1px solid rgba(162, 179, 236, 0.25);
+        background: linear-gradient(145deg, rgba(28, 36, 67, 0.92), rgba(19, 25, 48, 0.9));
+        padding: 14px;
+        min-height: 88px;
+      }
+
+      .card.focus {
+        box-shadow: var(--shadow-glow-gold);
+        border-color: rgba(200, 174, 108, 0.45);
+      }
+
+      .card.empty {
+        min-height: 72px;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-style: dashed;
+      }
+
+      .nav-sample {
+        display: flex;
+        gap: 8px;
+      }
+
+      .nav-item {
+        flex: 1;
+        height: 44px;
+        border-radius: 10px;
+        border: 1px solid rgba(160, 177, 237, 0.25);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-secondary);
+        font-size: 13px;
+      }
+
+      .nav-item.active {
+        color: var(--text-primary);
+        border-color: rgba(143, 123, 226, 0.5);
+        background: rgba(143, 123, 226, 0.2);
+      }
+
+      .modal {
+        border-radius: var(--radius-lg);
+        border: 1px solid rgba(200, 174, 108, 0.45);
+        background: linear-gradient(145deg, rgba(25, 30, 52, 0.96), rgba(17, 21, 37, 0.95));
+        padding: 16px;
+        box-shadow: var(--shadow-glow-gold);
+      }
+
+      .screens-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 390px);
+        gap: 28px;
+      }
+
+      .screen {
+        width: 390px;
+        min-height: 844px;
+        border-radius: 28px;
+        border: 1px solid rgba(176, 194, 248, 0.2);
+        background:
+          radial-gradient(560px 420px at 84% -8%, rgba(143, 123, 226, 0.22) 0%, rgba(143, 123, 226, 0) 56%),
+          radial-gradient(460px 340px at 14% 106%, rgba(106, 168, 212, 0.16) 0%, rgba(106, 168, 212, 0) 58%),
+          linear-gradient(168deg, rgba(18, 24, 46, 0.97), rgba(10, 14, 27, 0.96));
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        box-shadow: var(--shadow-soft);
+      }
+
+      .screen-head {
+        border-radius: 14px;
+        border: 1px solid rgba(180, 195, 247, 0.24);
+        background: linear-gradient(146deg, rgba(27, 34, 63, 0.95), rgba(19, 24, 47, 0.9));
+        padding: 12px;
+      }
+
+      .screen-head h3 {
+        font-size: 18px;
+        line-height: 1.25;
+        font-weight: 600;
+      }
+
+      .screen-head p {
+        margin-top: 6px;
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+
+      .block {
+        border-radius: 14px;
+        border: 1px solid rgba(160, 177, 237, 0.22);
+        background: rgba(23, 30, 56, 0.88);
+        padding: 12px;
+        color: var(--text-secondary);
+      }
+
+      .block.hero {
+        background: linear-gradient(140deg, rgba(143, 123, 226, 0.2), rgba(106, 168, 212, 0.16));
+        border-color: rgba(174, 190, 246, 0.38);
+      }
+
+      .block.gold {
+        background: linear-gradient(140deg, rgba(200, 174, 108, 0.16), rgba(200, 174, 108, 0.08));
+        border-color: rgba(200, 174, 108, 0.42);
+      }
+
+      .block.large {
+        min-height: 128px;
+      }
+
+      .block.xlarge {
+        min-height: 184px;
+      }
+
+      .row {
+        display: flex;
+        gap: 10px;
+      }
+
+      .row .block {
+        flex: 1;
+      }
+
+      .flow-note {
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+
+      .screen-footer {
+        margin-top: auto;
+        display: flex;
+        gap: 10px;
+      }
+
+      .screen-footer .btn {
+        min-width: 0;
+        flex: 1;
+      }
+
+      .message {
+        border-radius: 12px;
+        padding: 10px;
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .message.user {
+        background: rgba(143, 123, 226, 0.2);
+        border: 1px solid rgba(143, 123, 226, 0.45);
+      }
+
+      .message.bot {
+        background: rgba(200, 174, 108, 0.14);
+        border: 1px solid rgba(200, 174, 108, 0.45);
+      }
+
+      .danger {
+        border-color: rgba(191, 102, 102, 0.52) !important;
+        background: rgba(191, 102, 102, 0.12) !important;
+      }
+
+      .status-row {
+        display: flex;
+        gap: 8px;
+      }
+
+      .status-chip {
+        border-radius: 999px;
+        padding: 6px 10px;
+        font-size: 11px;
+        border: 1px solid rgba(160, 177, 237, 0.32);
+      }
+
+      .status-chip.success {
+        color: var(--state-success);
+        border-color: rgba(115, 180, 141, 0.45);
+      }
+
+      .status-chip.warn {
+        color: var(--accent-gold);
+        border-color: rgba(200, 174, 108, 0.45);
+      }
+
+      .status-chip.fail {
+        color: var(--state-danger);
+        border-color: rgba(191, 102, 102, 0.45);
+      }
+
+      .tiny {
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="board">
+      <section class="intro">
+        <h1 class="headline">SoulNum - UI High-Fidelity Giai đoạn 7</h1>
+        <p>
+          Chủ đề: Dark Spiritual Numerology. Giữ nguyên luồng F1-F6 từ wireframe đã duyệt, nâng cấp lên giao diện premium tối giản với cảm giác tĩnh lặng,
+          chiêm nghiệm và định hướng nội tâm.
+        </p>
+      </section>
+
+      <section class="panel">
+        <div class="panel-title">
+          <h2 class="headline">Design System</h2>
+          <div class="tag">8pt Grid + Dark Premium</div>
+        </div>
+
+        <div class="system-grid">
+          <article class="token-card">
+            <div class="token-title">Bảng màu nền và điểm nhấn</div>
+            <div class="color-row"><span class="swatch" style="background:#070913"></span><span>Nền sâu #070913</span></div>
+            <div class="color-row"><span class="swatch" style="background:#0d1122"></span><span>Midnight #0D1122</span></div>
+            <div class="color-row"><span class="swatch" style="background:#141a31"></span><span>Indigo #141A31</span></div>
+            <div class="color-row"><span class="swatch" style="background:#8f7be2"></span><span>Violet glow #8F7BE2</span></div>
+            <div class="color-row"><span class="swatch" style="background:#c8ae6c"></span><span>Soft gold #C8AE6C</span></div>
+            <div class="color-row"><span class="swatch" style="background:#6aa8d4"></span><span>Mystic blue #6AA8D4</span></div>
+          </article>
+
+          <article class="token-card">
+            <div class="token-title">Typography scale</div>
+            <div class="type-row"><strong class="headline" style="font-size:32px;">Tiêu đề H1</strong></div>
+            <div class="type-row"><strong class="headline" style="font-size:24px;">Tiêu đề H2</strong></div>
+            <div class="type-row"><span style="font-size:16px;">Nội dung chính 16</span></div>
+            <div class="type-row"><span style="font-size:14px;color:#b9c1e4;">Nội dung phụ 14</span></div>
+            <div class="type-row"><span style="font-size:12px;color:#8f98bf;">Chú thích 12</span></div>
+            <p class="mini-note">Heading dùng serif tinh tế; body dùng sans-serif để đảm bảo đọc trong môi trường tối.</p>
+          </article>
+
+          <article class="token-card">
+            <div class="token-title">Spacing, radius, elevation</div>
+            <div class="space-row"><span>8 / 16 / 24 / 32px</span></div>
+            <div class="radius-row"><span>Radius: 8 / 12 / 16 / 20 / 28px</span></div>
+            <div class="mini-note">Shadow mềm + glow nhẹ tạo focus, tránh neon bão hòa.</div>
+            <div class="mini-note">Surface layer: cấp 1 (thẻ), cấp 2 (modal), cấp 3 (trạng thái nổi bật).</div>
+          </article>
+        </div>
+
+        <div class="components-grid">
+          <article class="component-card">
+            <div class="token-title">Buttons (Default / Pressed / Disabled / Loading)</div>
+            <div class="state-row">
+              <div class="btn primary">Mặc định</div>
+              <div class="btn primary pressed">Đang nhấn</div>
+              <div class="btn primary disabled">Vô hiệu</div>
+              <div class="btn secondary loading">Đang tải</div>
+            </div>
+          </article>
+
+          <article class="component-card">
+            <div class="token-title">Inputs (Default / Focus / Disabled)</div>
+            <div class="input">Nhập họ và tên</div>
+            <div class="input focus">Ngày sinh DD/MM/YYYY</div>
+            <div class="input disabled">Trường bị khóa</div>
+          </article>
+
+          <article class="component-card">
+            <div class="token-title">Cards (Default / Focus / Empty)</div>
+            <div class="card">Thẻ nội dung chuẩn cho phân tích thần số học</div>
+            <div class="card focus">Thẻ được ưu tiên chú ý với glow vàng nhẹ</div>
+            <div class="card empty">Trạng thái trống</div>
+          </article>
+
+          <article class="component-card">
+            <div class="token-title">Navigation + Modal Surface</div>
+            <div class="nav-sample">
+              <div class="nav-item active">Trang chủ</div>
+              <div class="nav-item">Hồ sơ</div>
+              <div class="nav-item">VIP</div>
+              <div class="nav-item">Cài đặt</div>
+            </div>
+            <div class="modal">
+              <strong class="headline" style="font-size:20px;">Xác nhận thao tác</strong>
+              <p class="tiny" style="margin-top:6px;">Bề mặt modal dùng border vàng + blur sâu để tạo tầng ưu tiên rõ ràng.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-title">
+          <h2 class="headline">UI Screens</h2>
+          <div class="tag">12 màn hình · F1-F6</div>
+        </div>
+
+        <div class="screens-grid">
+          <article class="screen">
+            <div class="screen-head">
+              <h3>S1 · Mở lần đầu / Thiết lập hồ sơ</h3>
+              <p>F1</p>
+            </div>
+            <div class="block hero large">Khối giới thiệu giá trị SoulNum + lý do bắt đầu</div>
+            <div class="input">Họ và tên đầy đủ</div>
+            <div class="input focus">Ngày sinh</div>
+            <div class="block">Thông báo kiểm tra dữ liệu (lỗi/đúng)</div>
+            <div class="screen-footer">
+              <div class="btn secondary">Hủy</div>
+              <div class="btn primary">Tạo hồ sơ</div>
+            </div>
+          </article>
+
+          <article class="screen">
+            <div class="screen-head">
+              <h3>S2 · Trang chủ phân tích miễn phí</h3>
+              <p>F1</p>
+            </div>
+            <div class="block hero">Tóm tắt hồ sơ đang dùng</div>
+            <div class="block">Con số cốt lõi</div>
+            <div class="block">Ma trận tâm lý</div>
+            <div class="row">
+              <div class="block">Biểu đồ ngày sinh</div>
+              <div class="block">Năng lượng gia tăng</div>
+            </div>
+            <div class="row">
+              <div class="block">4 đỉnh cao</div>
+              <div class="block">4 thử thách</div>
+            </div>
+            <div class="row">
+              <div class="block gold">Chu kỳ sinh học</div>
+              <div class="block">Dự đoán N/T/N</div>
+            </div>
+            <div class="block gold">Nút mở AI Chatbot (VIP)</div>
+          </article>
+
+          <article class="screen">
+            <div class="screen-head">
+              <h3>S3 · Chi tiết phân tích</h3>
+              <p>F1</p>
+            </div>
+            <div class="nav-sample">
+              <div class="nav-item active">Cốt lõi</div>
+              <div class="nav-item">Ma trận</div>
+              <div class="nav-item">Chu kỳ</div>
+            </div>
+            <div class="block xlarge hero">Khối diễn giải cá nhân hóa chính</div>
+            <div class="block large">Các lớp diễn giải phụ theo ngữ cảnh đời sống</div>
+            <div class="block">Mô-đun liên quan để đào sâu tiếp</div>
+            <div class="screen-footer">
+              <div class="btn secondary">Quay lại</div>
+              <div class="btn primary">Mô-đun tiếp theo</div>
+            </div>
+          </article>
+
+          <article class="screen">
+            <div class="screen-head">
+              <h3>S4 · Chu kỳ sinh học bị khóa</h3>
+              <p>F2 · Free + Rewarded Ad</p>
+            </div>
+            <div class="block">Ngày hiện tại + hồ sơ đang dùng</div>
+            <div class="block xlarge">Xem trước nội dung bị khóa</div>
+            <div class="block gold">Giải thích: xem quảng cáo thưởng để mở hôm nay</div>
+            <div class="screen-footer">
+              <div class="btn secondary">Để sau</div>
+              <div class="btn primary">Xem quảng cáo để mở</div>
+            </div>
+          </article>
+
+          <article class="screen">
+            <div class="screen-head">
+              <h3>S5 · Chu kỳ sinh học đã mở</h3>
+              <p>F2</p>
+            </div>
+            <div class="status-row">
+              <span class="status-chip success">Mở khóa thành công</span>
+              <span class="status-chip warn">Hiệu lực trong ngày</span>
+            </div>
+            <div class="block large">Chu kỳ thể chất</div>
+            <div class="block large">Chu kỳ cảm xúc</div>
+            <div class="block large">Chu kỳ trí tuệ</div>
+            <div class="block hero">Tóm tắt gợi ý thực hành trong ngày</div>
+          </article>
+
+          <article class="screen">
+            <div class="screen-head">
+              <h3>S6 · Quản lý hồ sơ</h3>
+              <p>F3</p>
+            </div>
+            <div class="block hero">Hồ sơ đang dùng</div>
+            <div class="block">Hồ sơ đã lưu #2</div>
+            <div class="card empty">Ô thêm hồ sơ mới</div>
+            <div class="flow-note">Free: tối đa 2 hồ sơ · VIP: không giới hạn</div>
+            <div class="screen-footer">
+              <div class="btn secondary">Quản lý</div>
+              <div class="btn primary">Thêm hồ sơ</div>
+            </div>
+          </article>
+
+          <article class="screen">
+            <div class="screen-head">
+              <h3>S7 · Form thêm hồ sơ</h3>
+              <p>F3</p>
+            </div>
+            <div class="input">Họ và tên</div>
+            <div class="input">Ngày sinh</div>
+            <div class="block">Trạng thái kiểm tra dữ liệu</div>
+            <div class="block gold">Thông báo chạm giới hạn (khi Free đạt 2 hồ sơ)</div>
+            <div class="screen-footer">
+              <div class="btn secondary">Hủy</div>
+              <div class="btn primary">Lưu hồ sơ</div>
+            </div>
+          </article>
+
+          <article class="screen">
+            <div class="screen-head">
+              <h3>S8 · Chỉ số tương hợp</h3>
+              <p>F3</p>
+            </div>
+            <div class="input">Chọn hồ sơ A</div>
+            <div class="input">Chọn hồ sơ B</div>
+            <div class="block">Kiểm tra đủ họ tên + ngày sinh cho cả hai hồ sơ</div>
+            <div class="btn primary">Chạy phân tích tương hợp</div>
+            <div class="block xlarge hero">Kết quả tương hợp + diễn giải theo cặp</div>
+          </article>
+
+          <article class="screen">
+            <div class="screen-head">
+              <h3>S9 · Nâng cấp VIP Pro</h3>
+              <p>F4</p>
+            </div>
+            <div class="block gold">Giá trị VIP: AI Chatbot + không giới hạn hồ sơ + mở daily không quảng cáo</div>
+            <div class="row">
+              <div class="card focus">Gói tháng</div>
+              <div class="card">Gói năm</div>
+            </div>
+            <div class="status-row">
+              <span class="status-chip success">Thành công</span>
+              <span class="status-chip warn">Đang chờ</span>
+              <span class="status-chip fail">Thất bại</span>
+            </div>
+            <div class="screen-footer">
+              <div class="btn secondary">Không nâng cấp</div>
+              <div class="btn primary pressed">Tiếp tục thanh toán</div>
+            </div>
+          </article>
+
+          <article class="screen">
+            <div class="screen-head">
+              <h3>S10 · AI Chatbot đang hoạt động</h3>
+              <p>F5 · VIP Pro</p>
+            </div>
+            <div class="block">Ngữ cảnh hồ sơ đang dùng</div>
+            <div class="block gold">Hạn mức còn lại trong tháng: 24</div>
+            <div class="block xlarge">
+              <div class="message user">Mình muốn hiểu sâu điểm mạnh nghề nghiệp theo tên và ngày sinh.</div>
+              <div class="message bot" style="margin-top:8px;">Bạn có thiên hướng tư duy trực giác và khả năng kết nối cảm xúc. Giai đoạn này nên ưu tiên vai trò cần giao tiếp và cố vấn.</div>
+            </div>
+            <div class="row">
+              <div class="input" style="flex:1;">Nhập câu hỏi...</div>
+              <div class="btn primary" style="min-width:94px;">Gửi</div>
+            </div>
+          </article>
+
+          <article class="screen">
+            <div class="screen-head">
+              <h3>S11 · AI Chatbot hết hạn mức</h3>
+              <p>F5 · Hard limit</p>
+            </div>
+            <div class="block gold">Hạn mức còn lại: 0</div>
+            <div class="block danger">Đã chạm giới hạn cứng tháng này. Bạn có thể tiếp tục đọc lịch sử và chờ kỳ reset tiếp theo.</div>
+            <div class="block large">Lịch sử hội thoại (chỉ đọc)</div>
+            <div class="block">Thời điểm reset: 00:00 ngày đầu tháng mới</div>
+            <div class="btn primary disabled">Gửi tin nhắn</div>
+          </article>
+
+          <article class="screen">
+            <div class="screen-head">
+              <h3>S12 · Xác nhận xóa hồ sơ</h3>
+              <p>F6</p>
+            </div>
+            <div class="block">Tóm tắt hồ sơ cần xóa</div>
+            <div class="modal danger">
+              <strong class="headline" style="font-size:21px;">Xóa vĩnh viễn hồ sơ?</strong>
+              <p class="tiny" style="margin-top:8px;color:#d3aac0;">Hành động này không thể hoàn tác. Toàn bộ dữ liệu liên quan đến hồ sơ sẽ bị xóa.</p>
+            </div>
+            <div class="screen-footer">
+              <div class="btn secondary">Hủy</div>
+              <div class="btn primary pressed" style="background:rgba(191,102,102,0.24);border-color:rgba(191,102,102,0.5);">Xóa vĩnh viễn</div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

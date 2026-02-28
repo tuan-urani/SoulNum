@@ -1,0 +1,55 @@
+Running `(cd /Users/uranidev/.pub-cache/hosted/pub.dev/objective_c-9.3.0/; ANDROID_HOME=/Users/uranidev/Library/Android/sdk TMPDIR=/var/folders/24/2wzk8cb972zb7_94rdrhb2l80000gn/T/ PATH=/Applications/Xcode.app/Contents/SharedFrameworks/SwiftBuild.framework/Versions/A/PlugIns/SWBBuildService.bundle/Contents/PlugIns/SWBUniversalPlatformPlugin.bundle/Contents/Frameworks/SWBUniversalPlatform.framework/Resources:/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin:/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/local/bin:/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/libexec:/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/usr/bin:/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/usr/local/bin:/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/local/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/local/bin:/Users/uranidev/fvm/versions/3.38.5/bin:/Users/uranidev/Library/Android/sdk/emulator:/Users/uranidev/Library/Android/sdk/tools:/Users/uranidev/Library/Android/sdk/tools/bin:/Users/uranidev/Library/Android/sdk/platform-tools:/Users/uranidev/.gem/ruby/2.228.0/bin:/Users/uranidev/.shorebird/bin:/Users/uranidev/.nvm/versions/node/v22.18.0/bin:/opt/homebrew/lib/ruby/gems/3.4.0/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Users/uranidev/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand:/Users/uranidev/Library/Application Support/Code/User/globalStorage/github.copilot-chat/copilotCli HOME=/Users/uranidev /Users/uranidev/fvm/versions/3.38.5/bin/cache/dart-sdk/bin/dart --packages=/Users/uranidev/Documents/GitHub/SoulNum/.dart_tool/package_config.json /Users/uranidev/Documents/GitHub/SoulNum/.dart_tool/hooks_runner/objective_c/9f22e6a04e7d57ddc53af6565b2f38d4/hook.dill --config=/Users/uranidev/Documents/GitHub/SoulNum/.dart_tool/hooks_runner/objective_c/9f22e6a04e7d57ddc53af6565b2f38d4/input.json )`.
+INFO: 2026-02-28 17:58:42.646538: Running `/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang --version`.
+
+INFO: 2026-02-28 17:58:42.658874: Running `/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang --version`.
+
+INFO: 2026-02-28 17:58:42.671378: Running: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.5.sdk -target arm64-apple-ios-simulator -mios-version-min=12 -c /Users/uranidev/.pub-cache/hosted/pub.dev/objective_c-9.3.0/src/objective_c.c -fpic -I src -o /Users/uranidev/Documents/GitHub/SoulNum/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/objective_c.c.o
+
+art_api_dl.c.o
+
+INFO: 2026-02-28 17:58:42.671676: Running: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.5.sdk -target arm64-apple-ios-simulator -mios-version-min=12 -x objective-c -fobjc-arc -c /Users/uranidev/.pub-cache/hosted/pub.dev/objective_c-9.3.0/src/observer.m -fpic -I src -o /Users/uranidev/Documents/GitHub/SoulNum/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/observer.m.o
+
+put_stream_adapter.m.o
+INFO: 2026-02-28 17:58:42.671591: Running: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.5.sdk -target arm64-apple-ios-simulator -mios-version-min=12 -x objective-c -fobjc-arc -c /Users/uranidev/.pub-cache/hosted/pub.dev/objective_c-9.3.0/src/objective_c.m -fpic -I src -o /Users/uranidev/Documents/GitHub/SoulNum/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/objective_c.m.o
+
+INFO: 2026-02-28 17:58:42.671955: Running: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.5.sdk -target arm64-apple-ios-simulator -mios-version-min=12 -x objective-c -fobjc-arc -c /Users/uranidev/.pub-cache/hosted/pub.dev/objective_c-9.3.0/src/objective_c_bindings_generated.m -fpic -I src -o /Users/uranidev/Documents/GitHub/SoulNum/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/objective_c_bindings_generated.m.o
+
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.5.sdk -target arm64-apple-ios-simulator -mios-version-min=12 -x objective-c -fobjc-arc -c /Users/uranidev/.pub-cache/hosted/pub.dev/objective_c-9.3.0/src/protocol.m -fpic -I src -o /Users/uranidev/Documents/GitHub/SoulNum/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/protocol.m.o
+
+INFO: 2026-02-28 17:58:42.704556: 
+INFO: 2026-02-28 17:58:42.704708: 
+INFO: 2026-02-28 17:58:42.704758: Generated /Users/uranidev/Documents/GitHub/SoulNum/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/include/dart_api_dl.c.o
+
+INFO: 2026-02-28 17:58:42.704991: 
+INFO: 2026-02-28 17:58:42.705017: 
+INFO: 2026-02-28 17:58:42.705033: Generated /Users/uranidev/Documents/GitHub/SoulNum/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/objective_c.c.o
+
+INFO: 2026-02-28 17:58:42.718487: 
+INFO: 2026-02-28 17:58:42.718543: 
+INFO: 2026-02-28 17:58:42.718562: Generated /Users/uranidev/Documents/GitHub/SoulNum/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/protocol.m.o
+
+INFO: 2026-02-28 17:58:42.723994: 
+INFO: 2026-02-28 17:58:42.724043: 
+INFO: 2026-02-28 17:58:42.724063: Generated /Users/uranidev/Documents/GitHub/SoulNum/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/observer.m.o
+
+INFO: 2026-02-28 17:58:42.776148: 
+INFO: 2026-02-28 17:58:42.776159: 
+INFO: 2026-02-28 17:58:42.776167: Generated /Users/uranidev/Documents/GitHub/SoulNum/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/ns_number.m.o
+
+apter.m.o
+
+INFO: 2026-02-28 17:58:42.784976: 
+INFO: 2026-02-28 17:58:42.785006: 
+INFO: 2026-02-28 17:58:42.785016: Generated /Users/uranidev/Documents/GitHub/SoulNum/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/objective_c.m.o
+
+INFO: 2026-02-28 17:58:42.799657: 
+INFO: 2026-02-28 17:58:42.799682: 
+INFO: 2026-02-28 17:58:42.799691: Generated /Users/uranidev/Documents/GitHub/SoulNum/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/objective_c_bindings_generated.m.o
+
+INFO: 2026-02-28 17:58:42.799975: Running: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -shared -Wl,-encryptable -undefined dynamic_lookup -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.5.sdk -target arm64-apple-ios-simulator -mios-version-min=12 /Users/uranidev/Documents/GitHub/SoulNum/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/include/dart_api_dl.c.o /Users/uranidev/Documents/GitHub/SoulNum/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/objective_c.c.o /Users/uranidev/Documents/GitHub/SoulNum/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/input_stream_adapter.m.o /Users/uranidev/Documents/GitHub/SoulNum/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/objective_c.m.o /Users/uranidev/Documents/GitHub/SoulNum/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/observer.m.o /Users/uranidev/Documents/GitHub/SoulNum/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/ns_number.m.o /Users/uranidev/Documents/GitHub/SoulNum/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/protocol.m.o /Users/uranidev/Documents/GitHub/SoulNum/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/objective_c_bindings_generated.m.o -o /Users/uranidev/Documents/GitHub/SoulNum/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/objective_c.dylib
+
+INFO: 2026-02-28 17:58:42.825041: 
+INFO: 2026-02-28 17:58:42.825099: ld: warning: -undefined dynamic_lookup is deprecated on iOS-simulator
+
+INFO: 2026-02-28 17:58:42.825110: Generated /Users/uranidev/Documents/GitHub/SoulNum/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/objective_c.dylib
+

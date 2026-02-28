@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SoulNum - UI Detail Screens Giai đoạn 7</title>
+    <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+    <style>
+      :root {
+        --bg-void: #070913;
+        --bg-midnight: #0d1122;
+        --surface-1: #161c33;
+        --surface-2: #1d2545;
+        --line-soft: rgba(173, 191, 255, 0.2);
+        --line-strong: rgba(200, 174, 108, 0.5);
+        --text-primary: #f2f4ff;
+        --text-secondary: #b9c1e4;
+        --text-muted: #8f98bf;
+        --accent-gold: #c8ae6c;
+        --accent-violet: #8f7be2;
+        --accent-blue: #6aa8d4;
+        --state-warn: #d5b87a;
+        --state-good: #73b48d;
+        --shadow-soft: 0 10px 28px rgba(0, 0, 0, 0.35);
+        --glow-violet: 0 0 0 1px rgba(143, 123, 226, 0.35), 0 0 24px rgba(143, 123, 226, 0.16);
+        --glow-gold: 0 0 0 1px rgba(200, 174, 108, 0.42), 0 0 24px rgba(200, 174, 108, 0.14);
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        padding: 32px;
+        font-family: "Inter", "Segoe UI", Arial, sans-serif;
+        color: var(--text-primary);
+        background:
+          radial-gradient(1200px 800px at 8% -10%, rgba(143, 123, 226, 0.16) 0%, rgba(143, 123, 226, 0) 58%),
+          radial-gradient(900px 700px at 88% 12%, rgba(106, 168, 212, 0.15) 0%, rgba(106, 168, 212, 0) 58%),
+          linear-gradient(160deg, var(--bg-void) 0%, #090d1c 48%, var(--bg-midnight) 100%);
+      }
+
+      h1, h2, h3, p { margin: 0; }
+
+      .headline { font-family: "Cormorant Garamond", "Times New Roman", serif; letter-spacing: 0.2px; }
+
+      .board {
+        width: 1520px;
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+      }
+
+      .intro {
+        border: 1px solid var(--line-soft);
+        border-radius: 20px;
+        background: linear-gradient(148deg, rgba(21, 27, 49, 0.94), rgba(12, 17, 32, 0.9));
+        box-shadow: var(--shadow-soft);
+        padding: 24px;
+      }
+
+      .intro h1 {
+        font-size: 38px;
+        line-height: 1.15;
+        font-weight: 600;
+      }
+
+      .intro p {
+        margin-top: 10px;
+        font-size: 14px;
+        line-height: 1.6;
+        color: var(--text-secondary);
+      }
+
+      .legend {
+        margin-top: 14px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .pill {
+        border: 1px solid var(--line-strong);
+        border-radius: 999px;
+        color: var(--accent-gold);
+        padding: 6px 12px;
+        font-size: 12px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 390px);
+        gap: 24px;
+      }
+
+      .screen {
+        width: 390px;
+        min-height: 844px;
+        border-radius: 28px;
+        border: 1px solid rgba(176, 194, 248, 0.2);
+        background:
+          radial-gradient(560px 420px at 84% -8%, rgba(143, 123, 226, 0.22) 0%, rgba(143, 123, 226, 0) 56%),
+          radial-gradient(460px 340px at 14% 106%, rgba(106, 168, 212, 0.14) 0%, rgba(106, 168, 212, 0) 58%),
+          linear-gradient(168deg, rgba(18, 24, 46, 0.97), rgba(10, 14, 27, 0.96));
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        box-shadow: var(--shadow-soft);
+      }
+
+      .head {
+        border-radius: 14px;
+        border: 1px solid rgba(180, 195, 247, 0.24);
+        background: linear-gradient(146deg, rgba(27, 34, 63, 0.95), rgba(19, 24, 47, 0.9));
+        padding: 12px;
+      }
+
+      .head h2 {
+        font-size: 17px;
+        line-height: 1.25;
+        font-weight: 600;
+      }
+
+      .head p {
+        margin-top: 6px;
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+
+      .block {
+        border-radius: 14px;
+        border: 1px solid rgba(160, 177, 237, 0.22);
+        background: rgba(23, 30, 56, 0.88);
+        color: var(--text-secondary);
+        padding: 12px;
+      }
+
+      .block.hero {
+        background: linear-gradient(138deg, rgba(143, 123, 226, 0.22), rgba(106, 168, 212, 0.15));
+        border-color: rgba(174, 190, 246, 0.38);
+      }
+
+      .block.gold {
+        background: linear-gradient(138deg, rgba(200, 174, 108, 0.16), rgba(200, 174, 108, 0.08));
+        border-color: rgba(200, 174, 108, 0.45);
+      }
+
+      .block.focus {
+        box-shadow: var(--glow-violet);
+      }
+
+      .block.warning {
+        box-shadow: var(--glow-gold);
+      }
+
+      .block.large { min-height: 110px; }
+      .block.xlarge { min-height: 170px; }
+
+      .stat-row { display: flex; gap: 10px; }
+
+      .stat {
+        flex: 1;
+        border-radius: 12px;
+        border: 1px solid rgba(164, 181, 239, 0.3);
+        background: rgba(24, 31, 59, 0.92);
+        padding: 10px;
+      }
+
+      .stat strong {
+        display: block;
+        font-size: 20px;
+        color: var(--text-primary);
+      }
+
+      .stat span {
+        margin-top: 4px;
+        display: block;
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+
+      .chips {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .chip {
+        border-radius: 999px;
+        border: 1px solid rgba(173, 191, 255, 0.32);
+        padding: 6px 10px;
+        font-size: 11px;
+        color: var(--text-secondary);
+      }
+
+      .chip.good { border-color: rgba(115, 180, 141, 0.45); color: var(--state-good); }
+      .chip.warn { border-color: rgba(213, 184, 122, 0.45); color: var(--state-warn); }
+
+      .list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .row {
+        border-radius: 10px;
+        border: 1px solid rgba(161, 179, 237, 0.2);
+        background: rgba(24, 31, 59, 0.84);
+        padding: 10px;
+        font-size: 13px;
+        color: var(--text-secondary);
+      }
+
+      .timeline {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .timeline .item {
+        border-radius: 12px;
+        border: 1px solid rgba(160, 177, 237, 0.24);
+        background: rgba(24, 31, 58, 0.88);
+        padding: 10px;
+      }
+
+      .timeline .item strong {
+        display: block;
+        font-size: 13px;
+        color: var(--text-primary);
+      }
+
+      .timeline .item p {
+        margin-top: 5px;
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+
+      .matrix {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .matrix-cell {
+        border-radius: 10px;
+        border: 1px solid rgba(163, 180, 240, 0.28);
+        background: rgba(23, 30, 56, 0.95);
+        min-height: 56px;
+        padding: 8px;
+        font-size: 11px;
+        color: var(--text-secondary);
+      }
+
+      .footer {
+        margin-top: auto;
+        display: flex;
+        gap: 10px;
+      }
+
+      .btn {
+        flex: 1;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        border: 1px solid;
+      }
+
+      .btn.secondary {
+        border-color: rgba(200, 174, 108, 0.4);
+        color: var(--accent-gold);
+        background: rgba(200, 174, 108, 0.1);
+      }
+
+      .btn.primary {
+        border-color: rgba(171, 186, 245, 0.35);
+        color: var(--text-primary);
+        background: linear-gradient(130deg, rgba(143, 123, 226, 0.28), rgba(106, 168, 212, 0.22));
+      }
+
+      .tiny { font-size: 11px; color: var(--text-muted); }
+    </style>
+  </head>
+  <body>
+    <main class="board">
+      <section class="intro">
+        <h1 class="headline">SoulNum - Detail Screens từ Trang chủ (Giai đoạn 7)</h1>
+        <p>
+          Bổ sung các màn detail khi người dùng nhấn từng card trên Home, giữ nguyên user flow hiện tại và ngôn ngữ thiết kế dark spiritual numerology.
+        </p>
+        <div class="legend">
+          <span class="pill">Dark Foundation</span>
+          <span class="pill">Mystic Glow Hierarchy</span>
+          <span class="pill">Calm Premium Tone</span>
+          <span class="pill">Không đổi luồng chức năng</span>
+        </div>
+      </section>
+
+      <section class="grid">
+        <article class="screen">
+          <div class="head">
+            <h2>D1 · Chi tiết hồ sơ đang dùng</h2>
+            <p>Điểm vào từ Home: "Tóm tắt hồ sơ đang dùng"</p>
+          </div>
+          <div class="block hero">
+            Hồ sơ hiện tại: <strong>Nguyễn Minh Anh</strong><br />
+            Ngày sinh: 12/08/1998 · Hồ sơ chính
+          </div>
+          <div class="stat-row">
+            <div class="stat"><strong>7</strong><span>Con số đường đời</span></div>
+            <div class="stat"><strong>3</strong><span>Con số sứ mệnh</span></div>
+            <div class="stat"><strong>6</strong><span>Con số linh hồn</span></div>
+          </div>
+          <div class="block large">
+            <strong>Snapshot năng lượng</strong>
+            <p class="tiny">Mục tiêu trong 30 ngày: cân bằng trực giác và hành động thực tế.</p>
+          </div>
+          <div class="chips">
+            <span class="chip good">Hồ sơ đầy đủ dữ liệu</span>
+            <span class="chip">Dùng cho AI Chatbot</span>
+            <span class="chip warn">Có thể chỉnh sửa</span>
+          </div>
+          <div class="list">
+            <div class="row">Chuyển hồ sơ đang dùng</div>
+            <div class="row">Chỉnh sửa thông tin hồ sơ</div>
+            <div class="row">Xem tương hợp với hồ sơ khác</div>
+          </div>
+          <div class="footer">
+            <div class="btn secondary">Quay lại Home</div>
+            <div class="btn primary">Lưu cập nhật</div>
+          </div>
+        </article>
+
+        <article class="screen">
+          <div class="head">
+            <h2>D2 · Chi tiết con số cốt lõi</h2>
+            <p>Điểm vào từ Home: "Con số cốt lõi"</p>
+          </div>
+          <div class="block hero warning">
+            <strong>Con số chủ đạo: 7</strong>
+            Nội tâm sâu, thiên hướng học hỏi, tìm ý nghĩa và sự thật bên trong.
+          </div>
+          <div class="block focus">
+            <strong>Đường đời</strong>
+            Giai đoạn này phù hợp cho đào sâu kỹ năng chuyên môn và tự phản chiếu.
+          </div>
+          <div class="block">
+            <strong>Sứ mệnh</strong>
+            Chia sẻ tri thức, kết nối chiều sâu tinh thần với đời sống thực tế.
+          </div>
+          <div class="block">
+            <strong>Tính cách nổi bật</strong>
+            Tư duy độc lập · Cẩn trọng · Nhạy cảm với năng lượng xung quanh.
+          </div>
+          <div class="block large gold">
+            <strong>Gợi ý vận dụng</strong>
+            <p class="tiny">Mỗi ngày chọn 1 quyết định nhỏ dựa trên trực giác đã kiểm chứng bằng dữ kiện thực tế.</p>
+          </div>
+          <div class="footer">
+            <div class="btn secondary">Mô-đun trước</div>
+            <div class="btn primary">Mô-đun tiếp theo</div>
+          </div>
+        </article>
+
+        <article class="screen">
+          <div class="head">
+            <h2>D3 · Chi tiết ma trận tâm lý</h2>
+            <p>Điểm vào từ Home: "Ma trận tâm lý"</p>
+          </div>
+          <div class="block hero">
+            <strong>Tổng quan ma trận</strong><br />17 khía cạnh theo cụm: cá tính, năng lượng, sức khỏe, tâm linh.
+          </div>
+          <div class="matrix">
+            <div class="matrix-cell">Tư duy: 8/10</div>
+            <div class="matrix-cell">Kỷ luật: 6/10</div>
+            <div class="matrix-cell">Cảm xúc: 7/10</div>
+            <div class="matrix-cell">Sức bền: 5/10</div>
+            <div class="matrix-cell">Trực giác: 9/10</div>
+            <div class="matrix-cell">Giao tiếp: 6/10</div>
+            <div class="matrix-cell">Tâm linh: 8/10</div>
+            <div class="matrix-cell">Sáng tạo: 7/10</div>
+            <div class="matrix-cell">Cân bằng: 5/10</div>
+          </div>
+          <div class="chips">
+            <span class="chip good">Cụm mạnh: Trực giác</span>
+            <span class="chip warn">Cần bù: Sức bền</span>
+          </div>
+          <div class="block large">
+            <strong>Diễn giải sâu theo 17 khía cạnh</strong>
+            <p class="tiny">Hiển thị theo nhóm để giảm quá tải nhận thức, ưu tiên insight quan trọng trước.</p>
+          </div>
+          <div class="footer">
+            <div class="btn secondary">Quay lại Home</div>
+            <div class="btn primary">Xem đề xuất tiếp theo</div>
+          </div>
+        </article>
+
+        <article class="screen">
+          <div class="head">
+            <h2>D4 · Chi tiết biểu đồ ngày sinh</h2>
+            <p>Điểm vào từ Home: "Biểu đồ ngày sinh"</p>
+          </div>
+          <div class="block hero">
+            <strong>Biểu đồ ngày sinh cá nhân</strong><br />
+            Tập trung vào mật độ số, trục mạnh và vùng thiếu để định hướng phát triển.
+          </div>
+          <div class="block xlarge focus">
+            Khu vực biểu đồ trực quan (grid số 1-9) + điểm nhấn trục năng lượng chính.
+          </div>
+          <div class="stat-row">
+            <div class="stat"><strong>Trục 1-4-7</strong><span>Hành động</span></div>
+            <div class="stat"><strong>Trục 2-5-8</strong><span>Cảm xúc</span></div>
+            <div class="stat"><strong>Trục 3-6-9</strong><span>Tư duy</span></div>
+          </div>
+          <div class="block gold">
+            <strong>Điểm thiếu nổi bật</strong>
+            <p class="tiny">Số 4 thiếu nhẹ: cần tăng tính kỷ luật và nhất quán trong thói quen hằng ngày.</p>
+          </div>
+          <div class="footer">
+            <div class="btn secondary">Quay lại Home</div>
+            <div class="btn primary">Xem năng lượng gia tăng</div>
+          </div>
+        </article>
+
+        <article class="screen">
+          <div class="head">
+            <h2>D5 · Chi tiết năng lượng gia tăng</h2>
+            <p>Điểm vào từ Home: "Năng lượng gia tăng"</p>
+          </div>
+          <div class="block hero warning">
+            <strong>Năng lượng chủ đạo tuần này: 6</strong><br />
+            Tăng khả năng chăm sóc bản thân, kết nối và hoàn thiện công việc dang dở.
+          </div>
+          <div class="block">
+            <strong>Tài năng đang mở</strong>
+            <div class="chips" style="margin-top:8px;">
+              <span class="chip good">Lắng nghe</span>
+              <span class="chip good">Đồng cảm</span>
+              <span class="chip good">Hòa giải</span>
+            </div>
+          </div>
+          <div class="block">
+            <strong>Điểm yếu cần canh chỉnh</strong>
+            <div class="chips" style="margin-top:8px;">
+              <span class="chip warn">Cầu toàn</span>
+              <span class="chip warn">Ôm đồm</span>
+            </div>
+          </div>
+          <div class="block large">
+            <strong>Hành động đề xuất trong ngày</strong>
+            <p class="tiny">Ưu tiên 1 việc quan trọng nhất, hoàn tất trước khi mở rộng thêm nhiệm vụ mới.</p>
+          </div>
+          <div class="footer">
+            <div class="btn secondary">Quay lại Home</div>
+            <div class="btn primary">Áp dụng ngay</div>
+          </div>
+        </article>
+
+        <article class="screen">
+          <div class="head">
+            <h2>D6 · Chi tiết 4 đỉnh cao cuộc đời</h2>
+            <p>Điểm vào từ Home: "4 đỉnh cao"</p>
+          </div>
+          <div class="block hero">
+            <strong>Lộ trình đỉnh cao theo giai đoạn</strong><br />
+            Mỗi đỉnh phản ánh chủ đề phát triển nổi bật trong từng chu kỳ tuổi.
+          </div>
+          <div class="timeline">
+            <div class="item"><strong>Đỉnh 1 (26-34 tuổi): Số 5</strong><p>Mở rộng trải nghiệm, học qua thay đổi, tăng tính thích nghi.</p></div>
+            <div class="item"><strong>Đỉnh 2 (35-43 tuổi): Số 8</strong><p>Thăng tiến tài chính, củng cố vị thế và năng lực lãnh đạo.</p></div>
+            <div class="item"><strong>Đỉnh 3 (44-52 tuổi): Số 3</strong><p>Biểu đạt bản thân, sáng tạo, lan tỏa ảnh hưởng cá nhân.</p></div>
+            <div class="item"><strong>Đỉnh 4 (53+): Số 9</strong><p>Hoàn thiện chiều sâu tinh thần, trao giá trị cho cộng đồng.</p></div>
+          </div>
+          <div class="footer">
+            <div class="btn secondary">Quay lại Home</div>
+            <div class="btn primary">Xem 4 thử thách</div>
+          </div>
+        </article>
+
+        <article class="screen">
+          <div class="head">
+            <h2>D7 · Chi tiết 4 thử thách cuộc đời</h2>
+            <p>Điểm vào từ Home: "4 thử thách"</p>
+          </div>
+          <div class="block hero gold">
+            <strong>Bản đồ thử thách cá nhân</strong><br />
+            Hiểu rõ dạng khó khăn theo từng giai đoạn để chủ động vượt qua.
+          </div>
+          <div class="timeline">
+            <div class="item"><strong>Thử thách 1: Số 2</strong><p>Bài học về kiên nhẫn, lắng nghe và ổn định cảm xúc.</p></div>
+            <div class="item"><strong>Thử thách 2: Số 4</strong><p>Rèn kỷ luật, tạo cấu trúc và giữ cam kết dài hạn.</p></div>
+            <div class="item"><strong>Thử thách 3: Số 7</strong><p>Đối diện hoài nghi nội tâm, củng cố niềm tin cá nhân.</p></div>
+            <div class="item"><strong>Thử thách 4: Số 1</strong><p>Học cách tự quyết, dẫn dắt bản thân và chịu trách nhiệm.</p></div>
+          </div>
+          <div class="block large focus">
+            <strong>Chiến lược vượt thử thách</strong>
+            <p class="tiny">Chọn 1 thử thách trọng tâm theo giai đoạn hiện tại và thiết lập thói quen vi mô trong 21 ngày.</p>
+          </div>
+          <div class="footer">
+            <div class="btn secondary">Quay lại Home</div>
+            <div class="btn primary">Đưa vào AI Chatbot</div>
+          </div>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

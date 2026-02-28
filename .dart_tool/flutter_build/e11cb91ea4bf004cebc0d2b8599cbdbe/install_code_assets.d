@@ -1,0 +1,1 @@
+ /Users/uranidev/Documents/GitHub/SoulNum/.dart_tool/flutter_build/e11cb91ea4bf004cebc0d2b8599cbdbe/native_assets.json:  /Users/uranidev/Documents/GitHub/SoulNum/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/objective_c.dylib
