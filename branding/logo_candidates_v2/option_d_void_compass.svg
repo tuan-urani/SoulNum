@@ -1,0 +1,39 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='1024' height='1024' viewBox='0 0 1024 1024'>
+  <defs>
+    <radialGradient id='bg' cx='50%' cy='40%' r='75%'>
+      <stop offset='0%' stop-color='#1f2449'/>
+      <stop offset='60%' stop-color='#11152d'/>
+      <stop offset='100%' stop-color='#080b17'/>
+    </radialGradient>
+    <linearGradient id='gold' x1='0%' y1='0%' x2='100%' y2='100%'>
+      <stop offset='0%' stop-color='#f5dfb1'/>
+      <stop offset='100%' stop-color='#b68443'/>
+    </linearGradient>
+  </defs>
+  <rect width='1024' height='1024' fill='url(#bg)'/>
+
+  <circle cx='512' cy='512' r='330' fill='none' stroke='#3d396f' stroke-width='7'/>
+  <circle cx='512' cy='512' r='282' fill='none' stroke='url(#gold)' stroke-width='12'/>
+
+  <!-- compass -->
+  <path d='M512 252 L560 464 L772 512 L560 560 L512 772 L464 560 L252 512 L464 464 Z' fill='none' stroke='url(#gold)' stroke-width='14' stroke-linejoin='round'/>
+  <circle cx='512' cy='512' r='122' fill='none' stroke='#8578dc' stroke-width='8'/>
+  <circle cx='512' cy='512' r='64' fill='none' stroke='#d8b26f' stroke-width='10'/>
+
+  <!-- soul core -->
+  <circle cx='512' cy='512' r='18' fill='#f3d9a8'/>
+  <circle cx='512' cy='512' r='8' fill='#171c35'/>
+
+  <!-- 9 small markers -->
+  <g fill='#d8b26f'>
+    <circle cx='512' cy='196' r='8'/>
+    <circle cx='674' cy='240' r='8'/>
+    <circle cx='792' cy='368' r='8'/>
+    <circle cx='828' cy='532' r='8'/>
+    <circle cx='768' cy='694' r='8'/>
+    <circle cx='614' cy='802' r='8'/>
+    <circle cx='436' cy='810' r='8'/>
+    <circle cx='278' cy='730' r='8'/>
+    <circle cx='206' cy='560' r='8'/>
+  </g>
+</svg>

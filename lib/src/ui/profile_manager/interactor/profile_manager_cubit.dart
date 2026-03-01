@@ -3,6 +3,7 @@ import 'package:soulnum/src/core/model/request/delete_profile_request.dart';
 import 'package:soulnum/src/core/model/request/profile_upsert_request.dart';
 import 'package:soulnum/src/core/repository/profile_deletion_repository.dart';
 import 'package:soulnum/src/core/repository/profile_repository.dart';
+import 'package:soulnum/src/core/repository/session_repository.dart';
 import 'package:soulnum/src/ui/base/interactor/page_states.dart';
 import 'package:soulnum/src/ui/profile_manager/interactor/profile_manager_state.dart';
 
@@ -10,10 +11,12 @@ class ProfileManagerCubit extends Cubit<ProfileManagerState> {
   ProfileManagerCubit(
     this._profileRepository,
     this._profileDeletionRepository,
+    this._sessionRepository,
   ) : super(const ProfileManagerState(pageState: PageState.initial));
 
   final ProfileRepository _profileRepository;
   final ProfileDeletionRepository _profileDeletionRepository;
+  final SessionRepository _sessionRepository;
 
   Future<void> loadProfiles() async {
     emit(state.copyWith(pageState: PageState.loading, errorMessage: null));
@@ -72,5 +75,15 @@ class ProfileManagerCubit extends Cubit<ProfileManagerState> {
     }
     emit(state.copyWith(isSubmitting: false));
   }
-}
 
+  Future<void> signOut() async {
+    emit(state.copyWith(isSubmitting: true, errorMessage: null));
+    try {
+      await _sessionRepository.signOut();
+      emit(state.copyWith(isSubmitting: false));
+    } catch (error) {
+      emit(state.copyWith(isSubmitting: false, errorMessage: error.toString()));
+      rethrow;
+    }
+  }
+}

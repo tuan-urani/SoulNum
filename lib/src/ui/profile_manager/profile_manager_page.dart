@@ -11,6 +11,7 @@ import 'package:soulnum/src/ui/widgets/app_button.dart';
 import 'package:soulnum/src/ui/widgets/app_screen_scaffold.dart';
 import 'package:soulnum/src/ui/widgets/app_state_placeholder.dart';
 import 'package:soulnum/src/ui/widgets/base/app_body.dart';
+import 'package:soulnum/src/utils/app_colors.dart';
 import 'package:soulnum/src/utils/app_pages.dart';
 
 class ProfileManagerPage extends StatelessWidget {
@@ -38,8 +39,44 @@ class ProfileManagerPage extends StatelessWidget {
             });
           }
 
+          Future<void> signOut() async {
+            try {
+              await cubit.signOut();
+              if (Get.currentRoute == AppPages.profileManager) {
+                Get.offAllNamed(AppPages.login);
+              }
+            } catch (_) {
+              if (!context.mounted) return;
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      state.errorMessage ?? LocaleKey.commonError.tr,
+                    ),
+                  ),
+                );
+            }
+          }
+
           return AppScreenScaffold(
             title: LocaleKey.profileManagerTitle.tr,
+            bottomNavigationBar: SafeArea(
+              top: false,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                child: AppButton(
+                  label: LocaleKey.commonLogout.tr,
+                  onPressed: signOut,
+                  isLoading: state.isSubmitting,
+                  backgroundColor: AppColors.authSubButtonBackground,
+                  foregroundColor: AppColors.authText,
+                  borderSide: const BorderSide(
+                    color: AppColors.authSubButtonBorder,
+                  ),
+                ),
+              ),
+            ),
             child: AppBody(
               pageState: state.pageState,
               loading: const Center(child: CircularProgressIndicator()),

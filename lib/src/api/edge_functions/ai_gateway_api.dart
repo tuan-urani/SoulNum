@@ -19,9 +19,10 @@ class AiGatewayApi {
     required String functionName,
     required Map<String, dynamic> body,
     required String attempt,
+    String? explicitAccessToken,
   }) {
     final Session? session = _client.auth.currentSession;
-    final String token = session?.accessToken ?? '';
+    final String token = explicitAccessToken ?? session?.accessToken ?? '';
     if (token.isNotEmpty) {
       // Force Functions client to use the latest user JWT.
       _client.functions.setAuth(token);
@@ -33,6 +34,9 @@ class AiGatewayApi {
       run: () async {
         final FunctionResponse response = await _client.functions.invoke(
           functionName,
+          headers: token.isNotEmpty
+              ? <String, String>{'Authorization': 'Bearer $token'}
+              : null,
           body: body,
         );
         final dynamic data = response.data;
@@ -67,12 +71,20 @@ class AiGatewayApi {
       );
     } on FunctionException catch (primaryError) {
       if (_isInvalidJwt(primaryError)) {
+        String? refreshedToken;
         try {
           await AppLogger.trace<void>(
             action: 'SupabaseAuth.refreshSession.onInvalidJwt',
             request: <String, dynamic>{'function': functionName},
-            run: () => _client.auth.refreshSession(),
-            responseMapper: (_) => <String, dynamic>{'refreshed': true},
+            run: () async {
+              final AuthResponse refreshed = await _client.auth
+                  .refreshSession();
+              refreshedToken = refreshed.session?.accessToken;
+            },
+            responseMapper: (_) => <String, dynamic>{
+              'refreshed': true,
+              'has_new_access_token': (refreshedToken ?? '').isNotEmpty,
+            },
           );
         } catch (_) {
           // Swallow refresh errors; final decision is based on retry result.
@@ -83,6 +95,7 @@ class AiGatewayApi {
             functionName: functionName,
             body: body,
             attempt: 'retry_after_refresh',
+            explicitAccessToken: refreshedToken,
           );
         } on FunctionException catch (retryError) {
           if (_isInvalidJwt(retryError)) {

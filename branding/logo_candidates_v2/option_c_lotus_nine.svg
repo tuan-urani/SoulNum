@@ -1,0 +1,31 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='1024' height='1024' viewBox='0 0 1024 1024'>
+  <defs>
+    <radialGradient id='bg' cx='50%' cy='42%' r='72%'>
+      <stop offset='0%' stop-color='#212651'/>
+      <stop offset='58%' stop-color='#11152f'/>
+      <stop offset='100%' stop-color='#080c19'/>
+    </radialGradient>
+    <linearGradient id='gold' x1='0%' y1='0%' x2='100%' y2='0%'>
+      <stop offset='0%' stop-color='#f5e0b5'/>
+      <stop offset='100%' stop-color='#b9833e'/>
+    </linearGradient>
+  </defs>
+  <rect width='1024' height='1024' fill='url(#bg)'/>
+
+  <circle cx='512' cy='512' r='318' fill='none' stroke='#3a3569' stroke-width='6'/>
+  <circle cx='512' cy='512' r='270' fill='none' stroke='url(#gold)' stroke-width='12'/>
+
+  <!-- lotus petals -->
+  <g fill='none' stroke='url(#gold)' stroke-width='12' stroke-linejoin='round'>
+    <path d='M512 324 C548 392 548 452 512 504 C476 452 476 392 512 324 Z'/>
+    <path d='M426 372 C470 418 486 470 468 530 C420 502 396 452 426 372 Z'/>
+    <path d='M598 372 C628 452 604 502 556 530 C538 470 554 418 598 372 Z'/>
+    <path d='M366 454 C432 474 468 514 478 572 C410 570 358 538 366 454 Z'/>
+    <path d='M658 454 C666 538 614 570 546 572 C556 514 592 474 658 454 Z'/>
+  </g>
+
+  <!-- center numerology 9-inspired swirl -->
+  <circle cx='538' cy='518' r='84' fill='none' stroke='#8f83e8' stroke-width='16'/>
+  <path d='M538 418 C452 418 394 470 394 542 C394 596 438 640 500 640' fill='none' stroke='#dcb77a' stroke-width='20' stroke-linecap='round'/>
+  <circle cx='538' cy='518' r='22' fill='#f2d9ad'/>
+</svg>

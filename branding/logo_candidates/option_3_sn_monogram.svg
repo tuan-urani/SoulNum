@@ -1,0 +1,20 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='1024' height='1024' viewBox='0 0 1024 1024'>
+  <defs>
+    <linearGradient id='bg3' x1='0%' y1='0%' x2='100%' y2='100%'>
+      <stop offset='0%' stop-color='#111427'/>
+      <stop offset='60%' stop-color='#0C1020'/>
+      <stop offset='100%' stop-color='#080B15'/>
+    </linearGradient>
+    <linearGradient id='ink' x1='0%' y1='0%' x2='100%' y2='100%'>
+      <stop offset='0%' stop-color='#F1DBA9'/>
+      <stop offset='50%' stop-color='#D2A35A'/>
+      <stop offset='100%' stop-color='#9A6A32'/>
+    </linearGradient>
+  </defs>
+  <rect width='1024' height='1024' fill='url(#bg3)'/>
+  <rect x='188' y='188' width='648' height='648' rx='180' fill='none' stroke='#3B315A' stroke-width='6'/>
+  <path d='M676 320c-44-38-96-56-157-56-94 0-173 53-173 129 0 69 56 100 154 124 92 22 122 39 122 82 0 43-41 71-106 71-64 0-122-25-173-72' fill='none' stroke='url(#ink)' stroke-width='44' stroke-linecap='round' stroke-linejoin='round'/>
+  <path d='M340 704V322l344 382V322' fill='none' stroke='url(#ink)' stroke-width='30' stroke-linecap='round' stroke-linejoin='round' opacity='0.9'/>
+  <circle cx='796' cy='228' r='8' fill='#F1DBA9'/>
+  <circle cx='240' cy='780' r='6' fill='#D2A35A'/>
+</svg>

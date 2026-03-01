@@ -10,7 +10,7 @@ import 'package:soulnum/src/ui/base/interactor/page_states.dart';
 
 class AiChatCubit extends Cubit<AiChatState> {
   AiChatCubit(this._chatRepository, this._profileRepository)
-      : super(const AiChatState(pageState: PageState.initial));
+    : super(const AiChatState(pageState: PageState.initial));
 
   final ChatRepository _chatRepository;
   final ProfileRepository _profileRepository;
@@ -20,7 +20,9 @@ class AiChatCubit extends Cubit<AiChatState> {
     try {
       final profiles = await _profileRepository.getProfiles();
       final entitlement = await _profileRepository.getEntitlement();
-      final UserProfileModel? active = profiles.cast<UserProfileModel?>().firstWhere(
+      final UserProfileModel? active = profiles
+          .cast<UserProfileModel?>()
+          .firstWhere(
             (UserProfileModel? p) => p?.isActive ?? false,
             orElse: () => profiles.isNotEmpty ? profiles.first : null,
           );
@@ -36,12 +38,20 @@ class AiChatCubit extends Cubit<AiChatState> {
         state.copyWith(
           pageState: PageState.success,
           activeProfileId: active.id,
+          activeProfileName: active.fullName,
+          activeProfileBirthDate: active.birthDate,
           quotaLimit: entitlement?.chatbotMonthlyLimit ?? 0,
           remainingQuota: entitlement?.chatbotMonthlyLimit ?? 0,
+          quotaExhausted: (entitlement?.chatbotMonthlyLimit ?? 0) <= 0,
         ),
       );
     } catch (error) {
-      emit(state.copyWith(pageState: PageState.failure, errorMessage: error.toString()));
+      emit(
+        state.copyWith(
+          pageState: PageState.failure,
+          errorMessage: error.toString(),
+        ),
+      );
     }
   }
 
@@ -72,7 +82,8 @@ class AiChatCubit extends Cubit<AiChatState> {
       );
       final List<ChatMessageModel> nextMessages = <ChatMessageModel>[
         ...appended,
-        if ((response.reply ?? '').isNotEmpty) SoulMapper.toAssistantMessage(response.reply!),
+        if ((response.reply ?? '').isNotEmpty)
+          SoulMapper.toAssistantMessage(response.reply!),
       ];
       emit(
         state.copyWith(
@@ -89,11 +100,10 @@ class AiChatCubit extends Cubit<AiChatState> {
       emit(
         state.copyWith(
           isSubmitting: false,
-          pageState: PageState.failure,
+          pageState: PageState.success,
           errorMessage: error.toString(),
         ),
       );
     }
   }
 }
-

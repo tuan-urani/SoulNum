@@ -8,6 +8,8 @@ class AiChatState extends Equatable {
     this.messages = const <ChatMessageModel>[],
     this.sessionId,
     this.activeProfileId,
+    this.activeProfileName,
+    this.activeProfileBirthDate,
     this.remainingQuota = 0,
     this.quotaLimit = 0,
     this.quotaExhausted = false,
@@ -19,6 +21,8 @@ class AiChatState extends Equatable {
   final List<ChatMessageModel> messages;
   final String? sessionId;
   final String? activeProfileId;
+  final String? activeProfileName;
+  final DateTime? activeProfileBirthDate;
   final int remainingQuota;
   final int quotaLimit;
   final bool quotaExhausted;
@@ -30,6 +34,8 @@ class AiChatState extends Equatable {
     List<ChatMessageModel>? messages,
     String? sessionId,
     String? activeProfileId,
+    String? activeProfileName,
+    DateTime? activeProfileBirthDate,
     int? remainingQuota,
     int? quotaLimit,
     bool? quotaExhausted,
@@ -41,6 +47,9 @@ class AiChatState extends Equatable {
       messages: messages ?? this.messages,
       sessionId: sessionId ?? this.sessionId,
       activeProfileId: activeProfileId ?? this.activeProfileId,
+      activeProfileName: activeProfileName ?? this.activeProfileName,
+      activeProfileBirthDate:
+          activeProfileBirthDate ?? this.activeProfileBirthDate,
       remainingQuota: remainingQuota ?? this.remainingQuota,
       quotaLimit: quotaLimit ?? this.quotaLimit,
       quotaExhausted: quotaExhausted ?? this.quotaExhausted,
@@ -51,15 +60,16 @@ class AiChatState extends Equatable {
 
   @override
   List<Object?> get props => <Object?>[
-        pageState,
-        messages,
-        sessionId,
-        activeProfileId,
-        remainingQuota,
-        quotaLimit,
-        quotaExhausted,
-        isSubmitting,
-        errorMessage,
-      ];
+    pageState,
+    messages,
+    sessionId,
+    activeProfileId,
+    activeProfileName,
+    activeProfileBirthDate,
+    remainingQuota,
+    quotaLimit,
+    quotaExhausted,
+    isSubmitting,
+    errorMessage,
+  ];
 }
-

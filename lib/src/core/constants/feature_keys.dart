@@ -19,10 +19,10 @@ class EdgeFunctionNames {
   EdgeFunctionNames._();
 
   static const String getOrGenerateReading = 'fn_get_or_generate_reading';
-  static const String chatWithGuide = 'fn_chat_with_guide';
-  static const String unlockDailyBiorhythm = 'fn_unlock_daily_biorhythm';
-  static const String syncSubscription = 'fn_sync_subscription';
-  static const String deleteProfilePermanently = 'fn_delete_profile_permanently';
+  static const String chatWithGuide = 'fn_chat_with_guide_open';
+  static const String unlockDailyBiorhythm = 'fn_unlock_daily_biorhythm_open';
+  static const String syncSubscription = 'fn_sync_subscription_open';
+  static const String deleteProfilePermanently =
+      'fn_delete_profile_permanently';
   static const String getHistoryFeed = 'fn_get_history_feed';
 }
-

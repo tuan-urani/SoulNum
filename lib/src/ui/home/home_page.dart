@@ -52,12 +52,6 @@ class HomePage extends StatelessWidget {
 
           return AppScreenScaffold(
             title: LocaleKey.homeTitle.tr,
-            actions: <Widget>[
-              TextButton(
-                onPressed: () => Get.toNamed(AppPages.history),
-                child: Text(LocaleKey.homeHistory.tr),
-              ),
-            ],
             child: AppBody(
               pageState: state.pageState,
               loading: const Center(child: CircularProgressIndicator()),

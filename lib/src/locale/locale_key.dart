@@ -11,9 +11,12 @@ class LocaleKey {
   static const String commonSave = 'common_save';
   static const String commonDelete = 'common_delete';
   static const String commonCancel = 'common_cancel';
+  static const String commonLogout = 'common_logout';
   static const String commonError = 'common_error';
   static const String commonEmpty = 'common_empty';
   static const String commonNoData = 'common_no_data';
+  static const String commonExpand = 'common_expand';
+  static const String commonCollapse = 'common_collapse';
   static const String loginTitle = 'login_title';
   static const String loginSubtitle = 'login_subtitle';
   static const String loginBrandTagline = 'login_brand_tagline';
@@ -125,6 +128,112 @@ class LocaleKey {
       'reading_core_numbers_prev_module';
   static const String readingCoreNumbersNextModule =
       'reading_core_numbers_next_module';
+  static const String readingPsychMatrixEntryHint =
+      'reading_psych_matrix_entry_hint';
+  static const String readingPsychMatrixOverviewTitle =
+      'reading_psych_matrix_overview_title';
+  static const String readingPsychMatrixStrongClusterPrefix =
+      'reading_psych_matrix_strong_cluster_prefix';
+  static const String readingPsychMatrixWeakClusterPrefix =
+      'reading_psych_matrix_weak_cluster_prefix';
+  static const String readingPsychMatrixDeepTitle =
+      'reading_psych_matrix_deep_title';
+  static const String readingPsychMatrixBackHome =
+      'reading_psych_matrix_back_home';
+  static const String readingPsychMatrixNextSuggestion =
+      'reading_psych_matrix_next_suggestion';
+  static const String readingPsychMatrixMetricFallback =
+      'reading_psych_matrix_metric_fallback';
+  static const String readingBirthChartEntryHint =
+      'reading_birth_chart_entry_hint';
+  static const String readingBirthChartOverviewTitle =
+      'reading_birth_chart_overview_title';
+  static const String readingBirthChartVisualFallback =
+      'reading_birth_chart_visual_fallback';
+  static const String readingBirthChartAxisPrefix =
+      'reading_birth_chart_axis_prefix';
+  static const String readingBirthChartAxisAction =
+      'reading_birth_chart_axis_action';
+  static const String readingBirthChartAxisEmotion =
+      'reading_birth_chart_axis_emotion';
+  static const String readingBirthChartAxisMind =
+      'reading_birth_chart_axis_mind';
+  static const String readingBirthChartMissingTitle =
+      'reading_birth_chart_missing_title';
+  static const String readingBirthChartBackHome =
+      'reading_birth_chart_back_home';
+  static const String readingBirthChartNextEnergy =
+      'reading_birth_chart_next_energy';
+  static const String readingEnergyBoostEntryHint =
+      'reading_energy_boost_entry_hint';
+  static const String readingEnergyBoostDominantTitle =
+      'reading_energy_boost_dominant_title';
+  static const String readingEnergyBoostTalentTitle =
+      'reading_energy_boost_talent_title';
+  static const String readingEnergyBoostWeaknessTitle =
+      'reading_energy_boost_weakness_title';
+  static const String readingEnergyBoostActionTitle =
+      'reading_energy_boost_action_title';
+  static const String readingEnergyBoostBackHome =
+      'reading_energy_boost_back_home';
+  static const String readingEnergyBoostApplyNow =
+      'reading_energy_boost_apply_now';
+  static const String readingCompatibilityEntryHint =
+      'reading_compatibility_entry_hint';
+  static const String readingCompatibilityOverviewTitle =
+      'reading_compatibility_overview_title';
+  static const String readingCompatibilityHarmonyTitle =
+      'reading_compatibility_harmony_title';
+  static const String readingCompatibilityCautionTitle =
+      'reading_compatibility_caution_title';
+  static const String readingCompatibilityPrinciplesTitle =
+      'reading_compatibility_principles_title';
+  static const String readingFourPeaksEntryHint =
+      'reading_four_peaks_entry_hint';
+  static const String readingFourPeaksOverviewTitle =
+      'reading_four_peaks_overview_title';
+  static const String readingFourPeaksStagePrefix =
+      'reading_four_peaks_stage_prefix';
+  static const String readingFourPeaksBackHome = 'reading_four_peaks_back_home';
+  static const String readingFourPeaksNextChallenges =
+      'reading_four_peaks_next_challenges';
+  static const String readingFourChallengesEntryHint =
+      'reading_four_challenges_entry_hint';
+  static const String readingFourChallengesOverviewTitle =
+      'reading_four_challenges_overview_title';
+  static const String readingFourChallengesStagePrefix =
+      'reading_four_challenges_stage_prefix';
+  static const String readingFourChallengesStrategyTitle =
+      'reading_four_challenges_strategy_title';
+  static const String readingFourChallengesBackHome =
+      'reading_four_challenges_back_home';
+  static const String readingFourChallengesToChatbot =
+      'reading_four_challenges_to_chatbot';
+  static const String readingForecastDayEntryHint =
+      'reading_forecast_day_entry_hint';
+  static const String readingForecastMonthEntryHint =
+      'reading_forecast_month_entry_hint';
+  static const String readingForecastYearEntryHint =
+      'reading_forecast_year_entry_hint';
+  static const String readingForecastOverviewTitle =
+      'reading_forecast_overview_title';
+  static const String readingForecastThemesTitle =
+      'reading_forecast_themes_title';
+  static const String readingForecastThemeFallback =
+      'reading_forecast_theme_fallback';
+  static const String readingForecastFocusTitle =
+      'reading_forecast_focus_title';
+  static const String readingForecastOpportunityTitle =
+      'reading_forecast_opportunity_title';
+  static const String readingForecastCautionTitle =
+      'reading_forecast_caution_title';
+  static const String readingForecastBackHome = 'reading_forecast_back_home';
+  static const String readingForecastDayNextMonth =
+      'reading_forecast_day_next_month';
+  static const String readingForecastMonthNextYear =
+      'reading_forecast_month_next_year';
+  static const String readingForecastYearToChatbot =
+      'reading_forecast_year_to_chatbot';
   static const String compatibilityTitle = 'compatibility_title';
   static const String compatibilitySelectFirst = 'compatibility_select_first';
   static const String compatibilitySelectSecond = 'compatibility_select_second';
@@ -134,6 +243,15 @@ class LocaleKey {
   static const String dailyCycleUnlocked = 'daily_cycle_unlocked';
   static const String dailyCycleLockedDescription =
       'daily_cycle_locked_description';
+  static const String dailyCycleOverviewTitle = 'daily_cycle_overview_title';
+  static const String dailyCyclePhysicalTitle = 'daily_cycle_physical_title';
+  static const String dailyCycleEmotionalTitle = 'daily_cycle_emotional_title';
+  static const String dailyCycleIntellectualTitle =
+      'daily_cycle_intellectual_title';
+  static const String dailyCycleSuggestionsTitle =
+      'daily_cycle_suggestions_title';
+  static const String dailyCycleMoreInsightsTitle =
+      'daily_cycle_more_insights_title';
   static const String vipTitle = 'vip_title';
   static const String vipMonthly = 'vip_monthly';
   static const String vipYearly = 'vip_yearly';
@@ -142,6 +260,19 @@ class LocaleKey {
   static const String chatInputHint = 'chat_input_hint';
   static const String chatSend = 'chat_send';
   static const String chatQuotaExhausted = 'chat_quota_exhausted';
+  static const String chatProfileContextTitle = 'chat_profile_context_title';
+  static const String chatProfileBirthDateLabel =
+      'chat_profile_birth_date_label';
+  static const String chatQuotaTitle = 'chat_quota_title';
+  static const String chatHardLimitTitle = 'chat_hard_limit_title';
+  static const String chatReadOnlyHistoryTitle = 'chat_read_only_history_title';
+  static const String chatReadOnlyHistoryDescription =
+      'chat_read_only_history_description';
+  static const String chatNextResetTitle = 'chat_next_reset_title';
+  static const String chatNextResetDescription = 'chat_next_reset_description';
+  static const String chatEmptyConversation = 'chat_empty_conversation';
+  static const String chatUserLabel = 'chat_user_label';
+  static const String chatAssistantLabel = 'chat_assistant_label';
   static const String historyTitle = 'history_title';
   static const String historyLoadMore = 'history_load_more';
   static const String unauthorizedTitle = 'unauthorized_title';

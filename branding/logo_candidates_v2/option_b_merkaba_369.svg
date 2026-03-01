@@ -1,0 +1,33 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='1024' height='1024' viewBox='0 0 1024 1024'>
+  <defs>
+    <radialGradient id='bg' cx='50%' cy='45%' r='75%'>
+      <stop offset='0%' stop-color='#1f2145'/>
+      <stop offset='60%' stop-color='#131633'/>
+      <stop offset='100%' stop-color='#090d1d'/>
+    </radialGradient>
+    <linearGradient id='gold' x1='0%' y1='0%' x2='100%' y2='100%'>
+      <stop offset='0%' stop-color='#f4ddb0'/>
+      <stop offset='100%' stop-color='#bf8f4b'/>
+    </linearGradient>
+    <linearGradient id='violet' x1='0%' y1='100%' x2='100%' y2='0%'>
+      <stop offset='0%' stop-color='#8a7df0'/>
+      <stop offset='100%' stop-color='#c5b8ff'/>
+    </linearGradient>
+  </defs>
+  <rect width='1024' height='1024' fill='url(#bg)'/>
+
+  <circle cx='512' cy='512' r='320' fill='none' stroke='#3c3a75' stroke-width='6'/>
+  <circle cx='512' cy='512' r='268' fill='none' stroke='url(#gold)' stroke-width='12'/>
+
+  <!-- merkaba star -->
+  <polygon points='512,268 720,632 304,632' fill='none' stroke='url(#gold)' stroke-width='16' stroke-linejoin='round'/>
+  <polygon points='512,756 304,392 720,392' fill='none' stroke='url(#violet)' stroke-width='14' stroke-linejoin='round'/>
+
+  <circle cx='512' cy='512' r='110' fill='none' stroke='#d5b06e' stroke-width='8'/>
+
+  <!-- symbolic 3-6-9 points -->
+  <circle cx='512' cy='328' r='14' fill='#f3d8a2'/>
+  <circle cx='676' cy='606' r='14' fill='#f3d8a2'/>
+  <circle cx='348' cy='606' r='14' fill='#f3d8a2'/>
+  <circle cx='512' cy='512' r='20' fill='#8f83ee'/>
+</svg>
