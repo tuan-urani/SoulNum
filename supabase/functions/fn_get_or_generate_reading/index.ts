@@ -1,10 +1,12 @@
 import { fail, handleOptions, ok, readJson } from "../_shared/http.ts";
 import { createServiceClient, requireAuth } from "../_shared/supabase.ts";
 import { assertOwnedProfile } from "../_shared/domain.ts";
-import { getActivePrompt } from "../_shared/prompt.ts";
+import { ensurePromptSchema, getActivePrompt } from "../_shared/prompt.ts";
 import { loadActiveMemory, parseMemoryFactsFromOutput, touchMemory, upsertMemoryFacts } from "../_shared/memory.ts";
+import { AiGatewayError, callGemini, isAiGatewayError } from "../_shared/gemini.ts";
 import { sha256Hex } from "../_shared/hash.ts";
-import { callGemini } from "../_shared/gemini.ts";
+import { buildContextVersion, loadGlobalContextBlocks } from "../_shared/context.ts";
+import { getOrCreateProfileBaseline } from "../_shared/baseline.ts";
 
 type ReadingPayload = {
   profile_id: string;
@@ -29,6 +31,13 @@ const ALLOWED_FEATURES = new Set([
   "compatibility",
 ]);
 
+function failAi(error: AiGatewayError): Response {
+  return fail(error.message, error.status, {
+    code: error.code,
+    details: error.details ?? null,
+  });
+}
+
 Deno.serve(async (req) => {
   const optionsResponse = handleOptions(req);
   if (optionsResponse) return optionsResponse;
@@ -50,17 +59,52 @@ Deno.serve(async (req) => {
     }
 
     const profile = await assertOwnedProfile(serviceClient, userId, payload.profile_id);
+    const primaryBaseline = await getOrCreateProfileBaseline(serviceClient, {
+      userId,
+      profile,
+    });
 
     let secondaryProfile: Record<string, unknown> | null = null;
+    let secondaryBaseline: Awaited<ReturnType<typeof getOrCreateProfileBaseline>> | null = null;
+
     if (payload.secondary_profile_id) {
       secondaryProfile = await assertOwnedProfile(serviceClient, userId, payload.secondary_profile_id);
       if (!secondaryProfile.full_name || !secondaryProfile.birth_date || !profile.full_name || !profile.birth_date) {
         return fail("Compatibility requires both profiles with full_name and birth_date.");
       }
+      secondaryBaseline = await getOrCreateProfileBaseline(serviceClient, {
+        userId,
+        profile: secondaryProfile,
+      });
     }
 
     const prompt = await getActivePrompt(serviceClient, payload.feature_key);
-    const memory = await loadActiveMemory(serviceClient, userId, payload.profile_id, 20);
+    const promptSchema = ensurePromptSchema(prompt);
+
+    const [{ blocks: globalContextBlocks, contextVersion: globalContextVersion }, memory, { data: recentReadings, error: recentReadingsError }] =
+      await Promise.all([
+        loadGlobalContextBlocks(serviceClient, {
+          featureKey: payload.feature_key,
+          locale: "vi-VN",
+        }),
+        loadActiveMemory(serviceClient, userId, payload.profile_id, 20),
+        serviceClient
+          .from("user_readings")
+          .select("feature_key,period_key,target_date,result_snapshot,created_at")
+          .eq("user_id", userId)
+          .eq("profile_id", payload.profile_id)
+          .order("created_at", { ascending: false })
+          .limit(6),
+      ]);
+
+    if (recentReadingsError) {
+      throw new Error(`Failed to load recent readings: ${recentReadingsError.message}`);
+    }
+
+    const contextVersion = buildContextVersion({
+      globalContextVersion,
+      baselineVersions: [primaryBaseline.contextVersion, secondaryBaseline?.contextVersion],
+    });
 
     const normalizedInput = {
       feature_key: payload.feature_key,
@@ -69,6 +113,7 @@ Deno.serve(async (req) => {
         full_name: profile.full_name,
         birth_date: profile.birth_date,
         gender: profile.gender,
+        baseline: primaryBaseline.baseline,
       },
       secondary_profile: secondaryProfile
         ? {
@@ -76,15 +121,45 @@ Deno.serve(async (req) => {
           full_name: secondaryProfile.full_name,
           birth_date: secondaryProfile.birth_date,
           gender: secondaryProfile.gender,
+          baseline: secondaryBaseline?.baseline ?? null,
         }
         : null,
       target_period: payload.target_period ?? null,
       target_date: payload.target_date ?? null,
-      memory,
+      context: {
+        version: contextVersion,
+        global_blocks: globalContextBlocks,
+        memory,
+        recent_readings: recentReadings ?? [],
+      },
       prompt_version_id: prompt.id,
     };
 
-    const inputHash = await sha256Hex(normalizedInput);
+    // Cache key must be stable across repeated reads. Do not include
+    // volatile memory/recent history blocks used only for AI reasoning.
+    const cacheIdentity = {
+      feature_key: payload.feature_key,
+      profile: {
+        id: profile.id,
+        full_name: profile.full_name,
+        birth_date: profile.birth_date,
+        gender: profile.gender ?? null,
+      },
+      secondary_profile: secondaryProfile
+        ? {
+          id: secondaryProfile.id,
+          full_name: secondaryProfile.full_name,
+          birth_date: secondaryProfile.birth_date,
+          gender: secondaryProfile.gender ?? null,
+        }
+        : null,
+      target_period: payload.target_period ?? null,
+      target_date: payload.target_date ?? null,
+      prompt_version_id: prompt.id,
+      context_version: contextVersion,
+    };
+
+    const inputHash = await sha256Hex(cacheIdentity);
     const forceRefresh = payload.force_refresh === true;
     const nowIso = new Date().toISOString();
 
@@ -134,6 +209,8 @@ Deno.serve(async (req) => {
           from_cache: true,
           result: cached.output_json,
           generated_at: cached.generated_at,
+          prompt_version: prompt.version,
+          context_version: contextVersion,
         });
       }
     }
@@ -142,6 +219,7 @@ Deno.serve(async (req) => {
       model: prompt.model_name,
       systemInstruction: prompt.prompt_template,
       userPayload: normalizedInput,
+      responseSchema: promptSchema,
     });
 
     const { data: generatedRow, error: generatedError } = await serviceClient
@@ -201,8 +279,13 @@ Deno.serve(async (req) => {
       from_cache: false,
       result: generatedRow.output_json,
       generated_at: generatedRow.generated_at,
+      prompt_version: prompt.version,
+      context_version: contextVersion,
     });
   } catch (error) {
+    if (isAiGatewayError(error)) {
+      return failAi(error);
+    }
     return fail(error instanceof Error ? error.message : "Internal error", 500);
   }
 });

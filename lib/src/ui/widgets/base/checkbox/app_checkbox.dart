@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:linkhome/src/extensions/int_extensions.dart';
-import 'package:linkhome/src/utils/app_assets.dart';
-import 'package:linkhome/src/utils/app_colors.dart';
-import 'package:linkhome/src/utils/app_dimensions.dart';
-import 'package:linkhome/src/utils/app_styles.dart';
+import 'package:soulnum/src/extensions/int_extensions.dart';
+import 'package:soulnum/src/utils/app_colors.dart';
+import 'package:soulnum/src/utils/app_dimensions.dart';
+import 'package:soulnum/src/utils/app_styles.dart';
 
 class AppCheckbox extends StatelessWidget {
   final String title;

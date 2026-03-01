@@ -3,19 +3,33 @@
 ## 1) Implementation Status
 - Target Supabase project id: `aauidavuipscnbmdhale`
 - Architecture source: [PHASE_8_TECH_ARCHITECTURE.md](/Users/uranidev/Documents/GitHub/SoulNum/PHASE_8_TECH_ARCHITECTURE.md)
-- Execution mode: Supabase MCP (remote provisioning executed successfully on February 28, 2026)
+- Execution mode: Supabase MCP (initial provisioning on February 28, 2026, auth-mode updates on March 1, 2026)
 - Real implementation state:
-  - Remote migration applied: `20260228142738_phase9_soulnum_backend_core`
+  - Remote migrations applied:
+    - `20260228142738_phase9_soulnum_backend_core`
+    - `20260228163605_phase9_phone_password_auth_alignment`
+    - `20260228163752_phase9_auth_method_normalization`
+    - `20260301022503_phase9_email_password_auth_alignment`
+    - `20260301022747_phase9_email_testing_auto_confirm_retry`
   - Remote tables created in `public` schema (15 tables)
   - Remote RLS + policies applied
   - Remote Edge Functions deployed
 - Source artifacts in workspace:
   - `supabase/migrations/20260228211000_phase9_soulnum_backend.sql`
+  - `supabase/migrations/20260228222000_phase9_phone_password_auth_alignment.sql`
+  - `supabase/migrations/20260228223000_phase9_auth_method_normalization.sql`
+  - `supabase/migrations/20260301022503_phase9_email_password_auth_alignment.sql`
+  - `supabase/migrations/20260301022747_phase9_email_testing_auto_confirm_retry.sql`
   - `supabase/functions/*` (7 Edge Functions + shared modules)
   - `supabase/config.toml`
 - Validation evidence from MCP:
   - `get_project_url` -> `https://aauidavuipscnbmdhale.supabase.co`
-  - `list_migrations` includes `phase9_soulnum_backend_core`
+  - `list_migrations` includes:
+    - `phase9_soulnum_backend_core`
+    - `phase9_phone_password_auth_alignment`
+    - `phase9_auth_method_normalization`
+    - `phase9_email_password_auth_alignment`
+    - `phase9_email_testing_auto_confirm_retry`
   - `list_tables` shows all expected `public` tables with `rls_enabled: true`
   - `list_edge_functions` shows all required SoulNum function slugs as `ACTIVE`
 
@@ -64,6 +78,22 @@ Migration file: [20260228211000_phase9_soulnum_backend.sql](/Users/uranidev/Docu
   - feature mapping
   - AI memory role
   - usage intention
+
+### 2.5 Auth Metadata Alignment (Email + Password)
+- `public.users` has been extended with:
+  - `email text null`
+  - `phone_e164 text null`
+  - `auth_method text not null default 'unknown'`
+- Existing rows are backfilled from `auth.users.email`.
+- Legacy rows without email are normalized to `auth_method = 'unknown'`.
+- `handle_new_auth_user()` now writes `email` + `auth_method` during auth bootstrap.
+- Trigger `on_auth_user_updated` on `auth.users` now syncs from `email` changes.
+- `phone_e164` is retained as legacy metadata to avoid destructive schema changes.
+
+### 2.6 Testing Mode (No Email Confirmation)
+- `handle_new_auth_user()` has test-mode logic to auto-set `auth.users.email_confirmed_at` for newly created email users.
+- Existing unconfirmed email users are backfilled to `email_confirmed_at = now()` in migration.
+- Result: testing signup/login can proceed without waiting for email confirmation flow.
 
 ## 3) RLS Rules Implemented
 
@@ -129,7 +159,11 @@ Migration file: [20260228211000_phase9_soulnum_backend.sql](/Users/uranidev/Docu
 - `tg_set_updated_at()` trigger helper
 - `handle_new_auth_user()` auth bootstrap:
   - creates `public.users` row
+  - stores auth metadata (`email`, `auth_method`)
   - seeds `subscription_entitlements` default free tier
+  - auto-confirms email accounts in testing mode (`email_confirmed_at`)
+- `handle_auth_user_updated()`:
+  - syncs `public.users.email` from `auth.users.email` after updates
 - `increment_ai_usage_if_available(...)`:
   - atomic quota increment
   - hard limit enforcement
@@ -212,6 +246,9 @@ Current deployed function slugs:
 Additional note:
 - A temporary validation function `zz_path_test` was created to verify MCP path bundling before production deploys.
 - It is unrelated to SoulNum business logic and can be removed manually from Supabase dashboard if you want a clean function list.
+- Authentication mode on backend is aligned to email/password metadata.
+- Testing mode currently bypasses email confirmation through DB-side auto-confirm logic in `handle_new_auth_user()`.
+- For production hardening, remove this auto-confirm logic and re-enable email confirmation flow.
 
 ## 11) Backend Reasoning Summary
 - The schema is AI-memory-first:
@@ -224,3 +261,64 @@ Additional note:
   - RLS for user isolation
   - Gemini key server-side only
   - service-role only for privileged prompt and quota paths
+
+---
+
+## 12) Phase 10 Gemini Plan Execution Update (2026-03-01)
+
+### 12.1 Migrations Applied to Project `aauidavuipscnbmdhale`
+1. `phase10_context_baseline_tables`
+   - created `public.global_context_blocks`
+   - created `public.profile_numerology_baselines`
+   - applied RLS + policies + indexes + updated_at triggers
+2. `phase10_seed_prompt_and_context`
+   - seeded global context blocks (`global + feature`)
+   - seeded 12 active feature prompts in `public.prompt_versions`
+   - all seeded prompts use strict JSON schema + `gemini-2.5-flash`
+
+### 12.2 Remote Verification Snapshot
+1. Prompt active count: exactly 1 active row for each of 12 features:
+   - `core_numbers`, `psych_matrix`, `birth_chart`, `energy_boost`,
+   - `four_peaks`, `four_challenges`,
+   - `biorhythm_daily`,
+   - `forecast_day`, `forecast_month`, `forecast_year`,
+   - `compatibility`, `chat_assistant`.
+2. Global context blocks active:
+   - 1 global block
+   - 12 feature blocks
+3. New indexes present:
+   - `idx_global_context_blocks_lookup`
+   - `idx_global_context_blocks_updated_at`
+   - `idx_profile_numerology_baselines_user_updated`
+   - `idx_profile_numerology_baselines_profile_calc`
+
+### 12.3 Edge Function Source Implemented (Repo State)
+1. Updated:
+   - [supabase/functions/_shared/gemini.ts](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/_shared/gemini.ts)
+   - [supabase/functions/_shared/prompt.ts](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/_shared/prompt.ts)
+   - [supabase/functions/_shared/memory.ts](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/_shared/memory.ts)
+   - [supabase/functions/fn_get_or_generate_reading/index.ts](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/fn_get_or_generate_reading/index.ts)
+   - [supabase/functions/fn_chat_with_guide/index.ts](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/fn_chat_with_guide/index.ts)
+2. Added:
+   - [supabase/functions/_shared/context.ts](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/_shared/context.ts)
+   - [supabase/functions/_shared/baseline.ts](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/_shared/baseline.ts)
+   - [supabase/functions/_shared/numerology.ts](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/_shared/numerology.ts)
+
+### 12.4 Deployment Status Note (Important)
+1. Supabase MCP deploy succeeds for new slugs with the updated bundle (validated via test slug `zz_full_compile`).
+2. Supabase MCP currently returns `Function deploy failed due to an internal error` when attempting to update the two existing production slugs:
+   - `fn_get_or_generate_reading`
+   - `fn_chat_with_guide`
+3. Therefore:
+   - DB/migration state is fully applied on project.
+   - Updated AI orchestration code is present in repository.
+   - Direct in-place overwrite of the two old slugs is blocked by MCP deployment behavior at this time.
+
+### 12.5 Temporary MCP Validation Functions Present
+The following MCP validation slugs exist in project and are not part of business scope:
+1. `zz_path_test`
+2. `zz_compile_test`
+3. `zz_compile_test2`
+4. `zz_full_compile`
+
+They can be deleted manually in Supabase dashboard after final production function rollout.

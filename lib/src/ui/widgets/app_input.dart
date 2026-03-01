@@ -25,6 +25,7 @@ class AppInput extends StatefulWidget {
   final ValueChanged<String>? onChanged;
   final Color? fillColor;
   final Color? borderColor;
+  final Color? obscureIconColor;
   final EdgeInsetsGeometry? contentPadding;
   final EdgeInsetsGeometry? prefixIconPadding;
 
@@ -51,6 +52,7 @@ class AppInput extends StatefulWidget {
     this.onChanged,
     this.fillColor,
     this.borderColor,
+    this.obscureIconColor,
     this.contentPadding,
     this.prefixIconPadding,
   });
@@ -160,7 +162,7 @@ class _AppInputState extends State<AppInput> {
                         ? AppAssets.iconsHideEyeSvg
                         : AppAssets.iconsShowEyeSvg,
                     colorFilter: ColorFilter.mode(
-                      AppColors.color1C274C,
+                      widget.obscureIconColor ?? AppColors.color1C274C,
                       BlendMode.srcIn,
                     ),
                   ),

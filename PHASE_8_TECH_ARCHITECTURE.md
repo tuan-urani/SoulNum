@@ -1099,3 +1099,57 @@ Lưu ý triển khai:
 
 This sequence giữ rủi ro thấp nhất cho MVP vì khóa monetization và access-control trước, rồi mới mở rộng AI depth.
 
+---
+
+## Addendum (2026-03-01) - Gemini PromptOps + Context Warehouse v2
+
+### A1. Implemented Architectural Decisions
+1. PromptOps model locked: `Hybrid DB + Git`
+   - Runtime active prompt from `public.prompt_versions`.
+   - Source-of-truth seed via SQL migration file:
+     - [20260301102000_phase10_gemini_context_warehouse.sql](/Users/uranidev/Documents/GitHub/SoulNum/supabase/migrations/20260301102000_phase10_gemini_context_warehouse.sql)
+2. Context warehouse locked: `2 layers`
+   - Global layer: `public.global_context_blocks`.
+   - User/profile layer:
+     - deterministic baseline cache: `public.profile_numerology_baselines`,
+     - dynamic memory facts: `public.ai_context_memory`.
+3. Model policy locked for MVP:
+   - `gemini-2.5-flash` for all 12 features.
+4. Output contract locked:
+   - strict JSON schema per active prompt row (`response_schema` in DB).
+5. Security boundary unchanged:
+   - Gemini keys remain server-side only (Edge Functions).
+
+### A2. Edge Orchestration Source Updates
+Code has been updated in repository:
+1. [gemini.ts](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/_shared/gemini.ts)
+   - fallback key support: `GEMINI_API_KEY_FALLBACK`
+   - strict schema validation
+   - structured error taxonomy: `ai_key_error`, `ai_schema_invalid`, `ai_timeout`, `ai_gateway_error`
+2. [prompt.ts](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/_shared/prompt.ts)
+   - runtime retrieval of `response_schema`
+   - schema presence enforcement
+3. [memory.ts](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/_shared/memory.ts)
+   - memory taxonomy normalization and confidence clamping
+4. [context.ts](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/_shared/context.ts)
+   - global context loading + context version composition
+5. [baseline.ts](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/_shared/baseline.ts)
+   - deterministic baseline caching/reuse orchestration
+6. [numerology.ts](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/_shared/numerology.ts)
+   - deterministic numerology engine from `full_name + birth_date`
+7. [fn_get_or_generate_reading/index.ts](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/fn_get_or_generate_reading/index.ts)
+8. [fn_chat_with_guide/index.ts](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/fn_chat_with_guide/index.ts)
+
+### A3. Response Contract Update
+Both reading/chat flows now include:
+1. `prompt_version`
+2. `context_version`
+
+This preserves backward compatibility while exposing orchestration metadata for observability.
+
+### A4. Deployment Constraint Note
+1. Supabase MCP successfully compiles/deploys the updated bundle when using a new slug (validated with `zz_full_compile`).
+2. MCP currently returns internal error when updating the pre-existing slugs:
+   - `fn_get_or_generate_reading`
+   - `fn_chat_with_guide`
+3. Architecture remains valid; blocker is deployment transport behavior, not schema/orchestration design.

@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SoulNum Auth Screens</title>
+  <style>
+    :root {
+      --bg: #090a14;
+      --bg-soft: #111429;
+      --card: #171b33;
+      --border: #2a3158;
+      --text: #f6f7ff;
+      --muted: #aab0d5;
+      --accent: #bba46c;
+      --accent-2: #8f77ff;
+      --danger: #f18f8f;
+      --radius-lg: 22px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
+      --space-1: 8px;
+      --space-2: 12px;
+      --space-3: 16px;
+      --space-4: 20px;
+      --space-5: 24px;
+      --space-6: 32px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(1200px 700px at 15% 5%, #1a1f47 0%, transparent 55%),
+        radial-gradient(1000px 600px at 85% 100%, #2a1f4d 0%, transparent 60%),
+        var(--bg);
+      font-family: "Inter", "SF Pro Display", "Segoe UI", sans-serif;
+      color: var(--text);
+      padding: 48px 24px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .canvas {
+      width: min(980px, 100%);
+      display: grid;
+      grid-template-columns: repeat(2, 390px);
+      gap: 24px;
+      justify-content: center;
+    }
+
+    .phone {
+      width: 390px;
+      height: 844px;
+      border-radius: 40px;
+      border: 1px solid #313a65;
+      background:
+        linear-gradient(180deg, rgba(19, 24, 48, 0.95) 0%, rgba(10, 12, 24, 0.98) 100%);
+      box-shadow:
+        0 24px 60px rgba(0, 0, 0, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .phone::before,
+    .phone::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      filter: blur(42px);
+      pointer-events: none;
+    }
+
+    .phone::before {
+      width: 170px;
+      height: 170px;
+      top: -30px;
+      right: -40px;
+      background: rgba(143, 119, 255, 0.22);
+    }
+
+    .phone::after {
+      width: 180px;
+      height: 180px;
+      bottom: -45px;
+      left: -45px;
+      background: rgba(187, 164, 108, 0.16);
+    }
+
+    .status {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 26px;
+      letter-spacing: 0.2px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .brand-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #bba46c 0%, #8f77ff 100%);
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      color: #121525;
+      font-size: 16px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 21px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .brand p {
+      margin: 3px 0 0;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .panel {
+      background: rgba(23, 27, 51, 0.8);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      backdrop-filter: blur(7px);
+    }
+
+    .title {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .subtitle {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .form {
+      margin-top: 24px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+    }
+
+    .label {
+      font-size: 13px;
+      color: #d4d9f6;
+    }
+
+    .input {
+      width: 100%;
+      height: 48px;
+      border-radius: var(--radius-md);
+      border: 1px solid #37406f;
+      background: #121730;
+      color: var(--text);
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 2px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .link {
+      color: #c8b17b;
+      font-weight: 600;
+    }
+
+    .button {
+      margin-top: 6px;
+      height: 50px;
+      border-radius: 14px;
+      border: 0;
+      background: linear-gradient(135deg, #baa267 0%, #7f6bf2 100%);
+      color: #111425;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 8px 24px rgba(142, 122, 246, 0.3);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: #2f365f;
+    }
+
+    .sub-cta {
+      margin-top: 4px;
+      height: 46px;
+      border-radius: 14px;
+      border: 1px solid #3a4373;
+      background: #151b34;
+      color: #e4e7ff;
+      font-size: 14px;
+      display: grid;
+      place-items: center;
+      font-weight: 600;
+    }
+
+    .foot {
+      margin-top: 18px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .foot b { color: #d5c08d; }
+
+    .helper {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid #3b4a7f;
+      background: rgba(18, 23, 48, 0.9);
+      color: #b9c2ec;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+  </style>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</head>
+<body>
+  <div class="canvas">
+    <section class="phone" aria-label="Sign In Screen">
+      <div class="status"><span>9:41</span><span>5G • 100%</span></div>
+      <div class="brand">
+        <div class="brand-badge">SN</div>
+        <div>
+          <h1>SoulNum</h1>
+          <p>Kết nối bản thể nội tâm</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2 class="title">Đăng nhập</h2>
+        <p class="subtitle">Truy cập tài khoản để xem phân tích thần số học và lịch sử cá nhân hóa của bạn.</p>
+
+        <div class="form">
+          <label class="field">
+            <span class="label">Số điện thoại</span>
+            <div class="input">+84 912 345 678</div>
+          </label>
+
+          <label class="field">
+            <span class="label">Mật khẩu</span>
+            <div class="input">••••••••</div>
+          </label>
+
+          <div class="row">
+            <span>Ghi nhớ đăng nhập</span>
+            <span class="link">Quên mật khẩu?</span>
+          </div>
+
+          <button class="button">Đăng nhập</button>
+
+          <div class="divider">hoặc</div>
+
+          <button class="sub-cta">Tạo tài khoản mới</button>
+        </div>
+
+        <p class="foot">Bằng việc đăng nhập, bạn đồng ý với <b>Điều khoản</b> và <b>Chính sách bảo mật</b>.</p>
+      </div>
+    </section>
+
+    <section class="phone" aria-label="Register Screen">
+      <div class="status"><span>9:41</span><span>5G • 100%</span></div>
+      <div class="brand">
+        <div class="brand-badge">SN</div>
+        <div>
+          <h1>SoulNum</h1>
+          <p>Hành trình khám phá bắt đầu</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2 class="title">Đăng ký</h2>
+        <p class="subtitle">Tạo tài khoản bằng số điện thoại để lưu hồ sơ và đồng bộ dữ liệu thần số học an toàn.</p>
+
+        <div class="form">
+          <label class="field">
+            <span class="label">Số điện thoại</span>
+            <div class="input">+84 912 345 678</div>
+          </label>
+
+          <label class="field">
+            <span class="label">Mật khẩu</span>
+            <div class="input">Ít nhất 8 ký tự</div>
+          </label>
+
+          <label class="field">
+            <span class="label">Xác nhận mật khẩu</span>
+            <div class="input">Nhập lại mật khẩu</div>
+          </label>
+
+          <button class="button">Tạo tài khoản</button>
+
+          <div class="helper">Mật khẩu nên gồm chữ hoa, chữ thường, số và ký tự đặc biệt để bảo mật tài khoản tốt hơn.</div>
+
+          <div class="row" style="justify-content:center; margin-top: 4px;">
+            <span>Đã có tài khoản? <span class="link">Đăng nhập ngay</span></span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

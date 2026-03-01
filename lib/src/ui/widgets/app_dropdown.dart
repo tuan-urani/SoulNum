@@ -76,7 +76,7 @@ class _AppDropdownState<T> extends State<AppDropdown<T>> {
         onChanged: widget.onChanged,
         iconSize: 10,
         icon: SvgPicture.asset(
-          widget.pathIcon ?? AppAssets.iconsChevronDownSvg,
+          widget.pathIcon.isEmpty ? AppAssets.iconsChevronDownSvg : widget.pathIcon,
         ),
         decoration: InputDecoration(
           labelText: widget.label,

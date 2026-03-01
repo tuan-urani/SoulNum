@@ -1,10 +1,12 @@
 import { fail, handleOptions, ok, readJson } from "../_shared/http.ts";
 import { createServiceClient, requireAuth } from "../_shared/supabase.ts";
 import { assertOwnedProfile, getEntitlement } from "../_shared/domain.ts";
-import { getActivePrompt } from "../_shared/prompt.ts";
+import { ensurePromptSchema, getActivePrompt } from "../_shared/prompt.ts";
 import { loadActiveMemory, parseMemoryFactsFromOutput, upsertMemoryFacts } from "../_shared/memory.ts";
-import { callGemini } from "../_shared/gemini.ts";
+import { AiGatewayError, callGemini, isAiGatewayError } from "../_shared/gemini.ts";
 import { sha256Hex } from "../_shared/hash.ts";
+import { buildContextVersion, loadGlobalContextBlocks } from "../_shared/context.ts";
+import { getOrCreateProfileBaseline } from "../_shared/baseline.ts";
 
 type ChatPayload = {
   profile_id: string;
@@ -14,6 +16,13 @@ type ChatPayload = {
 
 function monthStartISO(date = new Date()): string {
   return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), 1)).toISOString().slice(0, 10);
+}
+
+function failAi(error: AiGatewayError): Response {
+  return fail(error.message, error.status, {
+    code: error.code,
+    details: error.details ?? null,
+  });
 }
 
 Deno.serve(async (req) => {
@@ -33,12 +42,31 @@ Deno.serve(async (req) => {
       return fail("profile_id and message are required.");
     }
 
-    await assertOwnedProfile(serviceClient, userId, payload.profile_id);
+    const profile = await assertOwnedProfile(serviceClient, userId, payload.profile_id);
+    const primaryBaseline = await getOrCreateProfileBaseline(serviceClient, {
+      userId,
+      profile,
+    });
+
     const entitlement = await getEntitlement(serviceClient, userId);
 
     if (!entitlement || entitlement.is_vip_pro !== true) {
       return fail("VIP Pro required for AI chatbot.", 403);
     }
+
+    const [prompt, { blocks: globalContextBlocks, contextVersion: globalContextVersion }] = await Promise.all([
+      getActivePrompt(serviceClient, "chat_assistant"),
+      loadGlobalContextBlocks(serviceClient, {
+        featureKey: "chat_assistant",
+        locale: "vi-VN",
+      }),
+    ]);
+
+    const promptSchema = ensurePromptSchema(prompt);
+    const contextVersion = buildContextVersion({
+      globalContextVersion,
+      baselineVersions: [primaryBaseline.contextVersion],
+    });
 
     const quotaLimit = Number(entitlement.chatbot_monthly_limit ?? 0);
     if (quotaLimit <= 0) {
@@ -48,6 +76,8 @@ Deno.serve(async (req) => {
         remaining_quota: 0,
         quota_limit: 0,
         quota_exhausted: true,
+        prompt_version: prompt.version,
+        context_version: contextVersion,
       });
     }
 
@@ -138,21 +168,31 @@ Deno.serve(async (req) => {
       throw new Error(`Failed to load recent readings: ${readingsError.message}`);
     }
 
-    const prompt = await getActivePrompt(serviceClient, "chat_assistant");
-
     const geminiInput = {
       profile_id: payload.profile_id,
       session_id: sessionId,
       user_message: payload.message.trim(),
-      memory,
-      recent_readings: recentReadings ?? [],
-      recent_messages: [...(recentMessages ?? [])].reverse(),
+      profile: {
+        id: profile.id,
+        full_name: profile.full_name,
+        birth_date: profile.birth_date,
+        gender: profile.gender,
+        baseline: primaryBaseline.baseline,
+      },
+      context: {
+        version: contextVersion,
+        global_blocks: globalContextBlocks,
+        memory,
+        recent_readings: recentReadings ?? [],
+        recent_messages: [...(recentMessages ?? [])].reverse(),
+      },
     };
 
     const geminiResult = await callGemini({
       model: prompt.model_name,
       systemInstruction: prompt.prompt_template,
       userPayload: geminiInput,
+      responseSchema: promptSchema,
     });
 
     const { data: quotaResult, error: quotaError } = await serviceClient.rpc(
@@ -177,6 +217,8 @@ Deno.serve(async (req) => {
         remaining_quota: 0,
         quota_limit: quotaLimit,
         quota_exhausted: true,
+        prompt_version: prompt.version,
+        context_version: contextVersion,
       });
     }
 
@@ -185,6 +227,7 @@ Deno.serve(async (req) => {
       message: payload.message.trim(),
       prompt_id: prompt.id,
       created_at: new Date().toISOString(),
+      context_version: contextVersion,
     });
 
     const { data: generated, error: generatedError } = await serviceClient
@@ -209,7 +252,9 @@ Deno.serve(async (req) => {
 
     const assistantText = typeof generated.output_json.reply === "string"
       ? generated.output_json.reply
-      : geminiResult.rawText;
+      : (typeof generated.output_json.summary === "string"
+        ? generated.output_json.summary
+        : geminiResult.rawText);
 
     const { error: assistantMessageError } = await serviceClient
       .from("ai_chat_messages")
@@ -244,9 +289,13 @@ Deno.serve(async (req) => {
       remaining_quota: remaining,
       quota_limit: quotaLimit,
       quota_exhausted: remaining <= 0,
+      prompt_version: prompt.version,
+      context_version: contextVersion,
     });
   } catch (error) {
+    if (isAiGatewayError(error)) {
+      return failAi(error);
+    }
     return fail(error instanceof Error ? error.message : "Internal error", 500);
   }
 });
-

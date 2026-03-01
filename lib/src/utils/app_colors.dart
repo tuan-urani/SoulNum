@@ -16,6 +16,29 @@ class AppColors {
   static const Color color1A84C93F = primaryAlpha10;
 
   // ===========================================================================
+  // AUTH / DARK THEME
+  // ===========================================================================
+  static const Color authBackground = Color(0xFF090A14);
+  static const Color authBackgroundSurface = Color(0xFF111429);
+  static const Color authPanel = Color(0xCC171B33);
+  static const Color authBorder = Color(0xFF2A3158);
+  static const Color authText = Color(0xFFF6F7FF);
+  static const Color authTextMuted = Color(0xFFAAB0D5);
+  static const Color authAccentGold = Color(0xFFBBA46C);
+  static const Color authAccentViolet = Color(0xFF8F77FF);
+  static const Color authInputBackground = Color(0xFF121730);
+  static const Color authInputBorder = Color(0xFF37406F);
+  static const Color authInputLabel = Color(0xFFD4D9F6);
+  static const Color authSubButtonBackground = Color(0xFF151B34);
+  static const Color authSubButtonBorder = Color(0xFF3A4373);
+  static const Color authHelperBorder = Color(0xFF3B4A7F);
+  static const Color authHelperBackground = Color(0xE6121730);
+  static const Color authHelperText = Color(0xFFB9C2EC);
+  static const Color authGlowViolet = Color(0x388F77FF);
+  static const Color authGlowGold = Color(0x29BBA46C);
+  static const Color authButtonText = Color(0xFF111425);
+
+  // ===========================================================================
   // SECONDARY
   // ===========================================================================
   static const Color secondary1 = Color(0xFFCAE7B4);

@@ -10,7 +10,9 @@ class AppBody extends StatelessWidget {
   final Widget success;
   final Widget? initial;
   final Widget? loading;
+  final Widget? empty;
   final Widget? failure;
+  final Widget? unauthorized;
 
   const AppBody({
     super.key,
@@ -18,7 +20,9 @@ class AppBody extends StatelessWidget {
     required this.success,
     this.initial,
     this.loading,
+    this.empty,
     this.failure,
+    this.unauthorized,
   });
 
   @override
@@ -35,8 +39,12 @@ class AppBody extends StatelessWidget {
             const Center(
               child: CustomCircularProgress(color: AppColors.primary),
             );
+      case PageState.empty:
+        return empty ?? const SizedBox.shrink();
       case PageState.failure:
         return failure ?? const SizedBox.shrink();
+      case PageState.unauthorized:
+        return unauthorized ?? const SizedBox.shrink();
       case PageState.success:
         return success;
     }

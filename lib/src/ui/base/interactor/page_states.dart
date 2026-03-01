@@ -1,1 +1,8 @@
-enum PageState { initial, loading, failure, success }
+enum PageState {
+  initial,
+  loading,
+  success,
+  empty,
+  failure,
+  unauthorized,
+}

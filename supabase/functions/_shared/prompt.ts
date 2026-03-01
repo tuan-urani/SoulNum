@@ -9,6 +9,13 @@ export type PromptVersion = {
   response_schema: Record<string, unknown> | null;
 };
 
+export function ensurePromptSchema(prompt: PromptVersion): Record<string, unknown> {
+  if (!prompt.response_schema || typeof prompt.response_schema !== "object" || Array.isArray(prompt.response_schema)) {
+    throw new Error(`Prompt "${prompt.feature_key}" version "${prompt.version}" is missing response_schema.`);
+  }
+  return prompt.response_schema;
+}
+
 export async function getActivePrompt(
   serviceClient: SupabaseClient,
   featureKey: string,
@@ -31,4 +38,3 @@ export async function getActivePrompt(
 
   return data as PromptVersion;
 }
-

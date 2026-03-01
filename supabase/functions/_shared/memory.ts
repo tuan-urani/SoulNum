@@ -7,6 +7,45 @@ export type MemoryFact = {
   confidence?: number;
 };
 
+const ALLOWED_MEMORY_TYPES = new Set<string>([
+  "trait",
+  "goal",
+  "pattern",
+  "preference",
+  "risk_note",
+  "compatibility",
+  "energy_state",
+  "decision_hint",
+]);
+
+function normalizeMemoryType(rawType: unknown): string | null {
+  if (typeof rawType !== "string") return null;
+  const normalized = rawType.trim().toLowerCase();
+  if (!normalized) return null;
+  if (!ALLOWED_MEMORY_TYPES.has(normalized)) {
+    return "pattern";
+  }
+  return normalized;
+}
+
+function normalizeMemoryKey(rawKey: unknown): string | null {
+  if (typeof rawKey !== "string") return null;
+  const normalized = rawKey
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9_\-\s]/g, "")
+    .replace(/\s+/g, "_")
+    .replace(/_+/g, "_")
+    .slice(0, 120);
+
+  return normalized.length > 0 ? normalized : null;
+}
+
+function normalizeConfidence(raw: unknown): number {
+  if (typeof raw !== "number" || Number.isNaN(raw)) return 0.6;
+  return Math.min(1, Math.max(0, raw));
+}
+
 export async function loadActiveMemory(
   serviceClient: SupabaseClient,
   userId: string,
@@ -93,16 +132,15 @@ export function parseMemoryFactsFromOutput(output: Record<string, unknown>): Mem
   for (const item of raw) {
     if (!item || typeof item !== "object") continue;
     const maybe = item as Record<string, unknown>;
-    const type = typeof maybe.type === "string" ? maybe.type : null;
-    const key = typeof maybe.key === "string" ? maybe.key : null;
+    const type = normalizeMemoryType(maybe.type);
+    const key = normalizeMemoryKey(maybe.key);
     const value = typeof maybe.value === "object" && maybe.value !== null
       ? (maybe.value as Record<string, unknown>)
       : null;
-    const confidence = typeof maybe.confidence === "number" ? maybe.confidence : undefined;
+    const confidence = normalizeConfidence(maybe.confidence);
     if (type && key && value) {
       facts.push({ type, key, value, confidence });
     }
   }
   return facts;
 }
-

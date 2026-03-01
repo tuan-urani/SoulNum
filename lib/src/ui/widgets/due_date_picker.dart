@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:soulnum/src/locale/locale_key.dart';
 import 'package:soulnum/src/extensions/int_extensions.dart';
-import 'package:soulnum/src/locale/locale_key.dart';
 import 'package:soulnum/src/utils/app_colors.dart';
 import 'package:soulnum/src/utils/app_styles.dart';
 
