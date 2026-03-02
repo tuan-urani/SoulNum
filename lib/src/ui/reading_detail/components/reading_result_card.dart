@@ -10,6 +10,7 @@ import 'package:soulnum/src/ui/widgets/app_card_section.dart';
 import 'package:soulnum/src/utils/app_colors.dart';
 import 'package:soulnum/src/utils/app_pages.dart';
 import 'package:soulnum/src/utils/app_styles.dart';
+import 'package:soulnum/src/utils/reading_meta_formatter.dart';
 
 class ReadingResultCard extends StatelessWidget {
   const ReadingResultCard({super.key, required this.reading});
@@ -54,6 +55,7 @@ class ReadingResultCard extends StatelessWidget {
     }
     if (reading.featureKey == FeatureKeys.forecastDay) {
       return _ForecastResultCard(
+        reading: reading,
         period: _ForecastPeriod.day,
         content: content,
         rawResult: reading.result,
@@ -61,6 +63,7 @@ class ReadingResultCard extends StatelessWidget {
     }
     if (reading.featureKey == FeatureKeys.forecastMonth) {
       return _ForecastResultCard(
+        reading: reading,
         period: _ForecastPeriod.month,
         content: content,
         rawResult: reading.result,
@@ -68,16 +71,16 @@ class ReadingResultCard extends StatelessWidget {
     }
     if (reading.featureKey == FeatureKeys.forecastYear) {
       return _ForecastResultCard(
+        reading: reading,
         period: _ForecastPeriod.year,
         content: content,
         rawResult: reading.result,
       );
     }
 
-    final String generatedAt = _formatDateTime(reading.generatedAt);
-    final String sourceLabel = reading.fromCache
-        ? LocaleKey.readingResultSourceCache.tr
-        : LocaleKey.readingResultSourceGenerated.tr;
+    final ReadingScopeMeta? targetMeta = ReadingMetaFormatter.targetMeta(
+      reading,
+    );
     final String prettyJson = const JsonEncoder.withIndent(
       '  ',
     ).convert(reading.result);
@@ -93,11 +96,14 @@ class ReadingResultCard extends StatelessWidget {
             runSpacing: 8,
             children: <Widget>[
               _MetaPill(
-                label: '${LocaleKey.readingResultGeneratedAt.tr}: $generatedAt',
+                label:
+                    '${LocaleKey.readingResultGeneratedAt.tr}: ${ReadingMetaFormatter.formatGeneratedAt(reading.generatedAt)}',
               ),
               _MetaPill(
-                label: '${LocaleKey.readingResultSourceLabel.tr}: $sourceLabel',
+                label:
+                    '${LocaleKey.readingResultSourceLabel.tr}: ${ReadingMetaFormatter.sourceLabel(reading.fromCache)}',
               ),
+              if (targetMeta != null) _MetaPill(label: targetMeta.pillText),
             ],
           ),
           12.height,
@@ -181,12 +187,6 @@ class ReadingResultCard extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String _formatDateTime(DateTime value) {
-    String twoDigits(int number) => number.toString().padLeft(2, '0');
-    return '${value.year}-${twoDigits(value.month)}-${twoDigits(value.day)} '
-        '${twoDigits(value.hour)}:${twoDigits(value.minute)}';
   }
 }
 
@@ -1266,11 +1266,13 @@ enum _ForecastPeriod { day, month, year }
 
 class _ForecastResultCard extends StatelessWidget {
   const _ForecastResultCard({
+    required this.reading,
     required this.period,
     required this.content,
     required this.rawResult,
   });
 
+  final ReadingModel reading;
   final _ForecastPeriod period;
   final _ReadingContent content;
   final Map<String, dynamic> rawResult;
@@ -1278,6 +1280,7 @@ class _ForecastResultCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _ForecastViewModel viewModel = _ForecastViewModel.fromResult(
+      reading: reading,
       period: period,
       content: content,
       rawResult: rawResult,
@@ -1301,6 +1304,11 @@ class _ForecastResultCard extends StatelessWidget {
           _FeatureHeaderCard(
             title: viewModel.title,
             entryHint: viewModel.entryHint,
+            metaPills: <String>[
+              if (viewModel.targetMeta != null) viewModel.targetMeta!.pillText,
+              '${LocaleKey.readingResultGeneratedAt.tr}: '
+                  '${ReadingMetaFormatter.formatGeneratedAt(reading.generatedAt)}',
+            ],
           ),
           12.height,
           _FeatureHighlightCard(
@@ -1432,10 +1440,15 @@ class _ForecastActionsCard extends StatelessWidget {
 }
 
 class _FeatureHeaderCard extends StatelessWidget {
-  const _FeatureHeaderCard({required this.title, required this.entryHint});
+  const _FeatureHeaderCard({
+    required this.title,
+    required this.entryHint,
+    this.metaPills = const <String>[],
+  });
 
   final String title;
   final String entryHint;
+  final List<String> metaPills;
 
   @override
   Widget build(BuildContext context) {
@@ -1475,6 +1488,16 @@ class _FeatureHeaderCard extends StatelessWidget {
                 height: 1.25,
               ),
             ),
+            if (metaPills.isNotEmpty) ...<Widget>[
+              10.height,
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: metaPills
+                    .map((String pill) => _MetaPill(label: pill))
+                    .toList(),
+              ),
+            ],
           ],
         ),
       ),
@@ -1939,70 +1962,6 @@ class _ActionCard extends StatelessWidget {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _ModuleNavButton extends StatelessWidget {
-  const _ModuleNavButton({
-    required this.label,
-    required this.onPressed,
-    required this.isPrimary,
-  });
-
-  final String label;
-  final VoidCallback onPressed;
-  final bool isPrimary;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 44,
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onPressed,
-          borderRadius: 12.borderRadiusAll,
-          child: Ink(
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: isPrimary
-                    ? AppColors.colorF586AA6.withValues(alpha: 0.35)
-                    : AppColors.authAccentGold.withValues(alpha: 0.4),
-              ),
-              borderRadius: 12.borderRadiusAll,
-              gradient: isPrimary
-                  ? LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: <Color>[
-                        AppColors.authAccentViolet.withValues(alpha: 0.28),
-                        AppColors.colorF59AEF9.withValues(alpha: 0.22),
-                      ],
-                    )
-                  : LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: <Color>[
-                        AppColors.authAccentGold.withValues(alpha: 0.1),
-                        AppColors.authAccentGold.withValues(alpha: 0.06),
-                      ],
-                    ),
-            ),
-            child: Center(
-              child: Text(
-                label,
-                style: AppStyles.bodyMedium(
-                  color: isPrimary
-                      ? AppColors.colorF2F4F7
-                      : AppColors.authAccentGold,
-                  height: 1.25,
-                ),
-              ),
-            ),
-          ),
         ),
       ),
     );
@@ -2879,6 +2838,7 @@ class _ForecastViewModel {
   const _ForecastViewModel({
     required this.title,
     required this.entryHint,
+    required this.targetMeta,
     required this.overview,
     required this.themeTags,
     required this.focus,
@@ -2891,6 +2851,7 @@ class _ForecastViewModel {
 
   final String title;
   final String entryHint;
+  final ReadingScopeMeta? targetMeta;
   final String overview;
   final List<String> themeTags;
   final String focus;
@@ -2901,6 +2862,7 @@ class _ForecastViewModel {
   final VoidCallback onNext;
 
   factory _ForecastViewModel.fromResult({
+    required ReadingModel reading,
     required _ForecastPeriod period,
     required _ReadingContent content,
     required Map<String, dynamic> rawResult,
@@ -2978,6 +2940,7 @@ class _ForecastViewModel {
           ? content.title
           : _defaultTitleByPeriod(period),
       entryHint: _entryHintByPeriod(period),
+      targetMeta: ReadingMetaFormatter.targetMeta(reading),
       overview: overview,
       themeTags: themeTags.isNotEmpty
           ? themeTags
@@ -2989,7 +2952,7 @@ class _ForecastViewModel {
           ? actions
           : <String>[LocaleKey.commonNoData.tr],
       nextCtaLabel: _nextLabelByPeriod(period),
-      onNext: _nextActionByPeriod(period),
+      onNext: _nextActionByPeriod(period, reading),
     );
   }
 
@@ -3026,7 +2989,10 @@ class _ForecastViewModel {
     }
   }
 
-  static VoidCallback _nextActionByPeriod(_ForecastPeriod period) {
+  static VoidCallback _nextActionByPeriod(
+    _ForecastPeriod period,
+    ReadingModel reading,
+  ) {
     switch (period) {
       case _ForecastPeriod.day:
         return () {
@@ -3035,6 +3001,10 @@ class _ForecastViewModel {
             arguments: <String, dynamic>{
               'feature_key': FeatureKeys.forecastMonth,
               'title_key': LocaleKey.homeForecastMonth,
+              if (reading.targetDate != null)
+                'target_date': ReadingMetaFormatter.toIsoDate(
+                  reading.targetDate!,
+                ),
             },
           );
         };
@@ -3045,6 +3015,11 @@ class _ForecastViewModel {
             arguments: <String, dynamic>{
               'feature_key': FeatureKeys.forecastYear,
               'title_key': LocaleKey.homeForecastYear,
+              'target_period':
+                  ReadingMetaFormatter.yearKeyFromMonthKey(
+                    reading.targetPeriod,
+                  ) ??
+                  reading.targetPeriod,
             },
           );
         };

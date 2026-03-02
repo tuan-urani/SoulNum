@@ -10,7 +10,10 @@
 - Architecture source-of-truth in repo:
   - `supabase/migrations/20260228211000_phase9_soulnum_backend.sql`
   - `supabase/migrations/20260301102000_phase10_gemini_context_warehouse.sql`
+  - `supabase/migrations/20260302113000_phase10_reading_scope_reuse_simplification.sql`
   - `supabase/functions/**`
+- Remote implementation note:
+  - Supabase MCP applied the equivalent reading-reuse migration on project `aauidavuipscnbmdhale` as `20260302090500_phase10_reading_scope_reuse_simplification`
 
 ---
 
@@ -61,14 +64,17 @@ flowchart LR
 
 ### 1.6 AI Generation Lifecycle
 1. Validate JWT + ownership.
-2. Load profile and deterministic numerology baseline.
-3. Load global context blocks and active memory.
-4. Resolve active prompt version.
-5. Build stable cache key (`input_hash`) using normalized identity/context version.
-6. Cache hit: return persisted output.
-7. Cache miss: invoke Gemini (`gemini-2.5-flash`).
-8. Validate JSON output against schema.
-9. Persist to `ai_generated_contents`, `user_readings`, `ai_context_memory`.
+2. Resolve effective reading scope by feature:
+   - fixed-once features: one record per profile snapshot
+   - daily features: one record per day
+   - monthly features: one record per month
+   - yearly features: one record per year
+3. Check `user_readings` first for an existing record in the effective scope.
+4. Reuse existing reading only if it is still fresh relative to profile updates.
+5. Only on miss: load deterministic baseline, global context, memory, and active prompt.
+6. Invoke Gemini (`gemini-2.5-flash`) only when missing for that scope.
+7. Validate JSON output against schema.
+8. Persist to `ai_generated_contents`, `user_readings`, `ai_context_memory`.
 
 ---
 
@@ -96,7 +102,7 @@ flowchart LR
 
 ### 2.5 Numerology Generation Module
 - Components: `fn_get_or_generate_reading`, `ai_generated_contents`, `user_readings`.
-- Responsibility: generate/cache/retrieve readings across feature keys.
+- Responsibility: reuse existing readings by feature scope and generate only when missing.
 - Interaction: reads prompt/context, persists output and memory facts.
 
 ### 2.6 Chatbot Module
@@ -196,19 +202,19 @@ flowchart LR
 ### 3.3.6 `ai_generated_contents`
 - Feature supported: all AI outputs.
 - Purpose: persist model outputs (`output_json`, tokens, prompt linkage).
-- Why exists: cache + audit + replay.
+- Why exists: audit + replay + artifact storage backing each generated reading.
 - Data ownership: user-owned.
 - Relationships: linked to readings and chat messages.
-- Example data: `{feature_key, input_hash, prompt_version_id, output_json}`.
+- Example data: `{feature_key, input_hash: "feature:forecast_month|profile:...|period_key:2026-03", prompt_version_id, output_json}`.
 - Future extension: moderation flags, latency metrics, cost attribution.
 
 ### 3.3.7 `user_readings`
 - Feature supported: readings history and retrieval.
-- Purpose: user-facing reading timeline snapshots.
-- Why exists: immutable-like history even when cache reused.
+- Purpose: user-facing reading records and primary lookup source for reading reuse.
+- Why exists: reading retrieval is now driven by existing record presence in the effective scope.
 - Data ownership: user-owned.
 - Relationships: references `user_profiles`, optional `ai_generated_contents`.
-- Example data: `{feature_key: "core_numbers", source_type: "cached"}`.
+- Example data: `{feature_key: "core_numbers", source_type: "ai_orchestrated"}`.
 - Future extension: bookmarking/favoriting.
 
 ### 3.3.8 `ai_context_memory`
@@ -316,9 +322,14 @@ flowchart LR
 
 ### 4.1.1 `fn_get_or_generate_reading`
 - Triggering action: user opens a reading feature (core numbers, psych matrix, forecast, etc.).
-- Purpose: cache-aware generate/retrieve reading.
+- Purpose: fetch existing reading for the effective scope or generate if missing.
 - Input payload: `profile_id`, `feature_key`, optional `target_period`, `target_date`, `secondary_profile_id`, `force_refresh`.
 - Context retrieval:
+  - owned profile(s)
+  - scope resolution by feature
+  - existing reading lookup in `user_readings`
+  - profile freshness cutoff based on `updated_at`
+  - only on miss:
   - owned profile(s)
   - deterministic baseline(s)
   - active prompt + schema
@@ -327,8 +338,8 @@ flowchart LR
   - recent readings
 - Gemini prompt usage: prompt from `prompt_versions` + context payload.
 - Persistence:
-  - cache hit: inserts `user_readings` (`source_type: cached`)
-  - cache miss: inserts `ai_generated_contents`, `user_readings`, upserts `ai_context_memory`
+  - hit: returns existing `user_readings.result_snapshot`
+  - miss: inserts `ai_generated_contents`, inserts `user_readings`, upserts `ai_context_memory`
 - Response: `{reading_id, feature_key, from_cache, result, generated_at, prompt_version, context_version}`.
 
 ### 4.1.2 `fn_chat_with_guide`
@@ -400,10 +411,15 @@ User Action -> Flutter CRUD call -> RLS filter by `auth.uid()` -> DB write/read 
 1. User opens reading.
 2. Flutter calls `fn_get_or_generate_reading`.
 3. Function authenticates user and validates profile ownership.
-4. Function loads prompt + global context + baseline + memory + recent readings.
-5. Function computes `input_hash`.
-6. Cache hit -> save reading history from cached artifact -> return.
-7. Cache miss -> Gemini generate -> schema validate -> persist artifact/history/memory -> return.
+4. Function resolves effective scope:
+   - fixed once
+   - by day
+   - by month
+   - by year
+5. Function queries `user_readings` for an existing row in that scope.
+6. If an existing row is found and it is newer than the relevant profile update(s), return it directly.
+7. If no valid row exists, function loads prompt/context/baseline and calls Gemini.
+8. Function validates output and persists new artifact + reading + memory facts.
 
 ## 5.3 Chat AI Flow
 1. User sends message in AI Chatbot.
@@ -424,17 +440,19 @@ User Action -> Flutter CRUD call -> RLS filter by `auth.uid()` -> DB write/read 
 
 ## 6) Scalability & Performance Strategy
 
-1. Artifact cache: `ai_generated_contents` keyed by `(feature_key, prompt_version_id, input_hash)`.
+1. Reading reuse is driven by direct scope lookup on `user_readings` rather than a complex composite cache hash.
 2. Deterministic baseline cache: `profile_numerology_baselines` reused for every profile request.
-3. PromptOps runtime switching: activate/deactivate prompt versions without app release.
-4. Indexed retrieval paths:
+3. Artifact persistence remains in `ai_generated_contents` for audit and replay.
+4. PromptOps runtime switching: activate/deactivate prompt versions without app release.
+5. Scope lookup indexes on `user_readings` support fixed/day/month/year reuse patterns.
+6. Indexed retrieval paths:
    - `user_id`
    - `feature_key`
    - `created_at` / `generated_at`
-5. Memory growth control: scheduled compaction of stale `ai_context_memory`.
-6. Cost control:
+7. Memory growth control: scheduled compaction of stale `ai_context_memory`.
+8. Cost control:
    - VIP monthly hard-limit via `ai_usage_ledger`
-   - cache-first generation policy.
+   - existing-reading-first generation policy.
 
 ---
 
@@ -495,4 +513,3 @@ Optional:
 - `VIP_CHATBOT_MONTHLY_LIMIT`
 - `BILLING_VERIFY_URL`
 - `CRON_SECRET`
-

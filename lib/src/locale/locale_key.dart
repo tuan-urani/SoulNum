@@ -138,6 +138,13 @@ class LocaleKey {
   static const String readingResultSourceCache = 'reading_result_source_cache';
   static const String readingResultSourceGenerated =
       'reading_result_source_generated';
+  static const String readingResultTargetLabel = 'reading_result_target_label';
+  static const String readingResultTargetDateLabel =
+      'reading_result_target_date_label';
+  static const String readingResultTargetMonthLabel =
+      'reading_result_target_month_label';
+  static const String readingResultTargetYearLabel =
+      'reading_result_target_year_label';
   static const String readingResultSummaryTitle =
       'reading_result_summary_title';
   static const String readingResultInsightsTitle =

@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:soulnum/src/core/constants/feature_keys.dart';
 import 'package:soulnum/src/core/model/entitlement_model.dart';
 import 'package:soulnum/src/core/model/request/get_reading_request.dart';
+import 'package:soulnum/src/core/model/reading_target_scope.dart';
 import 'package:soulnum/src/core/model/request/unlock_daily_biorhythm_request.dart';
 import 'package:soulnum/src/core/model/user_profile_model.dart';
 import 'package:soulnum/src/core/repository/profile_repository.dart';
@@ -11,7 +12,7 @@ import 'package:soulnum/src/ui/daily_cycle/interactor/daily_cycle_state.dart';
 
 class DailyCycleCubit extends Cubit<DailyCycleState> {
   DailyCycleCubit(this._profileRepository, this._readingRepository)
-      : super(const DailyCycleState(pageState: PageState.initial));
+    : super(const DailyCycleState(pageState: PageState.initial));
 
   final ProfileRepository _profileRepository;
   final ReadingRepository _readingRepository;
@@ -19,9 +20,13 @@ class DailyCycleCubit extends Cubit<DailyCycleState> {
   Future<void> load() async {
     emit(state.copyWith(pageState: PageState.loading, errorMessage: null));
     try {
-      final List<UserProfileModel> profiles = await _profileRepository.getProfiles();
-      final EntitlementModel? entitlement = await _profileRepository.getEntitlement();
-      final UserProfileModel? active = profiles.cast<UserProfileModel?>().firstWhere(
+      final List<UserProfileModel> profiles = await _profileRepository
+          .getProfiles();
+      final EntitlementModel? entitlement = await _profileRepository
+          .getEntitlement();
+      final UserProfileModel? active = profiles
+          .cast<UserProfileModel?>()
+          .firstWhere(
             (UserProfileModel? p) => p?.isActive ?? false,
             orElse: () => profiles.isNotEmpty ? profiles.first : null,
           );
@@ -42,7 +47,12 @@ class DailyCycleCubit extends Cubit<DailyCycleState> {
         );
       }
     } catch (error) {
-      emit(state.copyWith(pageState: PageState.failure, errorMessage: error.toString()));
+      emit(
+        state.copyWith(
+          pageState: PageState.failure,
+          errorMessage: error.toString(),
+        ),
+      );
     }
   }
 
@@ -50,10 +60,7 @@ class DailyCycleCubit extends Cubit<DailyCycleState> {
     if (state.activeProfile == null) return;
     await _unlockAndLoad(
       activeProfile: state.activeProfile!,
-      adProof: <String, dynamic>{
-        'network': 'admob',
-        'status': 'completed',
-      },
+      adProof: <String, dynamic>{'network': 'admob', 'status': 'completed'},
     );
   }
 
@@ -63,10 +70,14 @@ class DailyCycleCubit extends Cubit<DailyCycleState> {
   }) async {
     emit(state.copyWith(isSubmitting: true));
     try {
+      final ReadingTargetScope targetScope = ReadingTargetScope.resolve(
+        featureKey: FeatureKeys.biorhythmDaily,
+      );
+      final DateTime unlockDate = targetScope.targetDate ?? DateTime.now();
       final unlockResponse = await _readingRepository.unlockDailyBiorhythm(
         UnlockDailyBiorhythmRequest(
           profileId: activeProfile.id,
-          unlockDate: DateTime.now(),
+          unlockDate: unlockDate,
           adProof: adProof,
         ),
       );
@@ -74,7 +85,7 @@ class DailyCycleCubit extends Cubit<DailyCycleState> {
         GetReadingRequest(
           profileId: activeProfile.id,
           featureKey: FeatureKeys.biorhythmDaily,
-          targetDate: DateTime.now(),
+          targetDate: unlockDate,
         ),
       );
       emit(
@@ -98,4 +109,3 @@ class DailyCycleCubit extends Cubit<DailyCycleState> {
     }
   }
 }
-

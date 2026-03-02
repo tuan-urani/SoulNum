@@ -22,6 +22,8 @@ class ReadingDetailPage extends StatefulWidget {
 class _ReadingDetailPageState extends State<ReadingDetailPage> {
   late final String _featureKey;
   late final String _titleKey;
+  late final DateTime? _targetDate;
+  late final String? _targetPeriod;
   String? _secondaryProfileId;
   late final ReadingDetailCubit _cubit;
 
@@ -32,6 +34,8 @@ class _ReadingDetailPageState extends State<ReadingDetailPage> {
         (Get.arguments as Map?)?.cast<String, dynamic>() ?? <String, dynamic>{};
     _featureKey = args['feature_key'] as String? ?? '';
     _titleKey = args['title_key'] as String? ?? LocaleKey.readingDetailTitle;
+    _targetDate = _readDateArg(args['target_date']);
+    _targetPeriod = args['target_period'] as String?;
     _secondaryProfileId = args['secondary_profile_id'] as String?;
     _cubit = Get.find<ReadingDetailCubit>();
 
@@ -46,7 +50,22 @@ class _ReadingDetailPageState extends State<ReadingDetailPage> {
       featureKey: _featureKey,
       titleKey: _titleKey,
       secondaryProfileId: _secondaryProfileId,
+      targetDate: _targetDate,
+      targetPeriod: _targetPeriod,
     );
+  }
+
+  DateTime? _readDateArg(dynamic value) {
+    if (value is DateTime) {
+      return DateTime(value.year, value.month, value.day);
+    }
+    if (value is String) {
+      final DateTime? parsed = DateTime.tryParse(value);
+      if (parsed != null) {
+        return DateTime(parsed.year, parsed.month, parsed.day);
+      }
+    }
+    return null;
   }
 
   @override

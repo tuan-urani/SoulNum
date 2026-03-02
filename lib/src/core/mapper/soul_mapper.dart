@@ -34,13 +34,19 @@ class SoulMapper {
     );
   }
 
-  static ReadingModel toReading(ReadingResponse response) {
+  static ReadingModel toReading(
+    ReadingResponse response, {
+    DateTime? targetDate,
+    String? targetPeriod,
+  }) {
     return ReadingModel(
       readingId: response.readingId,
       featureKey: response.featureKey,
       result: response.result,
       generatedAt: response.generatedAt,
       fromCache: response.fromCache,
+      targetDate: targetDate,
+      targetPeriod: targetPeriod,
     );
   }
 
@@ -48,8 +54,12 @@ class SoulMapper {
     return HistoryItemModel(
       id: row['id'] as String? ?? '',
       featureKey: row['feature_key'] as String? ?? '',
-      createdAt: DateTime.tryParse(row['created_at'] as String? ?? '') ?? DateTime.now(),
-      resultSnapshot: (row['result_snapshot'] as Map?)?.cast<String, dynamic>() ?? <String, dynamic>{},
+      createdAt:
+          DateTime.tryParse(row['created_at'] as String? ?? '') ??
+          DateTime.now(),
+      resultSnapshot:
+          (row['result_snapshot'] as Map?)?.cast<String, dynamic>() ??
+          <String, dynamic>{},
       targetDate: DateTime.tryParse(row['target_date'] as String? ?? ''),
       periodKey: row['period_key'] as String?,
     );
@@ -71,4 +81,3 @@ class SoulMapper {
     );
   }
 }
-

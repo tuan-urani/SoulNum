@@ -87,6 +87,10 @@ Implemented categories:
 - Response DTOs: reading/chat/unlock/subscription/delete/history/profile/entitlement.
 - Domain models: profile/entitlement/reading/chat/history/feature tile.
 - Mapper: `core/mapper/soul_mapper.dart`.
+- `ReadingModel` also carries request-derived scope metadata:
+  - `targetDate` for `forecast_day` and `biorhythm_daily`
+  - `targetPeriod` for `forecast_month` and `forecast_year`
+  - This allows Flutter UI to render the active time scope without changing the backend response schema.
 
 ## 4) Folder Structure Rationale
 Implemented structure aligns with project architecture and `ui.md`:
@@ -158,6 +162,11 @@ Implemented via `AiGatewayApi` + `SupabaseAiDataSource`:
 5. Edge Function handles prompt/memory/generation/persistence server-side.
 6. Response DTO is mapped to domain model.
 7. Cubit emits next state (`success`, `failure`, `unauthorized`, or `empty`).
+8. For hybrid reading features, Flutter resolves and forwards the effective scope before invocation:
+   - `targetDate` for `forecast_day`
+   - `targetPeriod` (`YYYY-MM`) for `forecast_month`
+   - `targetPeriod` (`YYYY`) for `forecast_year`
+   - `targetDate` for `biorhythm_daily`
 
 ## 8) Monetization and Gating Behavior (Implemented)
 1. Core numerology reading remains free (Edge reading function callable for valid profile).

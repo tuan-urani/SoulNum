@@ -8,8 +8,9 @@
   - repository migrations under `supabase/migrations/*`
   - repository edge functions under `supabase/functions/*`
   - Supabase project config in `supabase/config.toml`
+- Remote verification performed on 2026-03-02 against project `aauidavuipscnbmdhale` via Supabase MCP.
 
-This document reflects the implementation state tracked in source control. If remote dashboard state differs, treat that as environment drift and reconcile by migration/function deploy.
+This document reflects the implemented backend state. Note: the repository migration file `20260302113000_phase10_reading_scope_reuse_simplification.sql` was applied to the remote project by MCP as migration version `20260302090500_phase10_reading_scope_reuse_simplification`.
 
 ---
 
@@ -33,6 +34,12 @@ This document reflects the implementation state tracked in source control. If re
 6. `20260301102000_phase10_gemini_context_warehouse.sql`
 - Added context warehouse + deterministic baseline tables.
 - Seeded global context blocks and 12 active prompts.
+
+7. `20260302113000_phase10_reading_scope_reuse_simplification.sql` (repo)
+- Remote applied version: `20260302090500_phase10_reading_scope_reuse_simplification`
+- Simplified reading reuse to be record-based by effective scope.
+- Added scope lookup indexes on `user_readings`.
+- Updated DB comments to reflect `user_readings` as the primary reuse source.
 
 ---
 
@@ -86,8 +93,8 @@ This document reflects the implementation state tracked in source control. If re
 5. `user_profiles.id` -> profile-scoped entities (`user_readings`, `ai_context_memory`, `daily_biorhythm_unlocks`, `profile_numerology_baselines`)
 
 ## 3.2 Integrity Constraints
-- Unique cache identity support:
-  - `ai_generated_contents(feature_key, prompt_version_id, input_hash)` index (lookup critical)
+- Artifact identity/index support:
+  - `ai_generated_contents(feature_key, prompt_version_id, input_hash)` index
 - Memory uniqueness:
   - `ai_context_memory unique(user_id, profile_id, memory_type, memory_key)`
 - Daily unlock idempotency:
@@ -153,6 +160,9 @@ RLS is enabled on all 17 public tables.
 - `idx_user_readings_user_feature_created_at`
 - `idx_user_readings_profile_feature_created_at`
 - `idx_user_readings_user_created_at`
+- `idx_user_readings_reuse_fixed_scope`
+- `idx_user_readings_reuse_target_date_scope`
+- `idx_user_readings_reuse_period_scope`
 - `idx_ai_context_memory_user_profile_active`
 - `idx_ai_context_memory_user_last_used`
 - `idx_ai_context_memory_user_created`
@@ -213,7 +223,7 @@ RLS is enabled on all 17 public tables.
 
 ## 7.2 Business Functions
 1. `fn_get_or_generate_reading`
-- Reading orchestration with cache, Gemini call, schema validation, persistence, memory upsert.
+- Reading orchestration with direct existing-record lookup by effective scope, Gemini call on miss, schema validation, persistence, and memory upsert.
 
 2. `fn_chat_with_guide`
 - VIP-only chatbot, session handling, quota enforcement, persistence.
@@ -246,7 +256,7 @@ From `supabase/config.toml`:
 - `ai_generated_contents` stores raw and structured AI result + token metadata.
 
 2. User-facing history:
-- `user_readings` stores snapshots and source type (`cached` or `ai_orchestrated`).
+- `user_readings` stores generated reading records and is now the first lookup source before any new reading generation.
 
 3. Long-term memory:
 - `ai_context_memory` stores normalized memory facts with confidence and activity status.
@@ -256,6 +266,13 @@ From `supabase/config.toml`:
 
 5. Global context reuse:
 - `global_context_blocks` supplies platform/feature-level guidance for prompt construction.
+
+6. Reading reuse strategy:
+- Fixed readings are reused once per profile snapshot.
+- `forecast_day` and `biorhythm_daily` are reused per day.
+- `forecast_month` is reused per month.
+- `forecast_year` is reused per year.
+- Existing reading reuse is invalidated when the relevant profile has been updated after the reading was created.
 
 ---
 
@@ -315,4 +332,3 @@ Note: Gemini API currently rejects some JSON Schema keywords (e.g., `additionalP
 2. AI generation requests are never sent directly from Flutter to Gemini.
 3. Monetization gates (VIP, quota, ad unlock) are enforced in Edge Functions and DB/RPC logic.
 4. For production hardening, disable testing auto-confirm and enforce full email verification.
-

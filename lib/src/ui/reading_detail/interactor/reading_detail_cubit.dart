@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:soulnum/src/core/model/request/get_reading_request.dart';
+import 'package:soulnum/src/core/model/reading_target_scope.dart';
 import 'package:soulnum/src/core/model/user_profile_model.dart';
 import 'package:soulnum/src/core/repository/profile_repository.dart';
 import 'package:soulnum/src/core/repository/reading_repository.dart';
@@ -22,6 +23,8 @@ class ReadingDetailCubit extends Cubit<ReadingDetailState> {
     required String featureKey,
     required String titleKey,
     String? secondaryProfileId,
+    DateTime? targetDate,
+    String? targetPeriod,
   }) async {
     emit(
       state.copyWith(
@@ -58,11 +61,18 @@ class ReadingDetailCubit extends Cubit<ReadingDetailState> {
         );
         return;
       }
+      final ReadingTargetScope targetScope = ReadingTargetScope.resolve(
+        featureKey: featureKey,
+        requestedTargetDate: targetDate,
+        requestedTargetPeriod: targetPeriod,
+      );
       final reading = await _readingRepository.getOrGenerateReading(
         GetReadingRequest(
           profileId: active.id,
           featureKey: featureKey,
           secondaryProfileId: secondaryProfileId,
+          targetDate: targetScope.targetDate,
+          targetPeriod: targetScope.targetPeriod,
         ),
       );
       emit(

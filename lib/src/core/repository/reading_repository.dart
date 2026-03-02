@@ -12,13 +12,28 @@ class ReadingRepository {
   final SupabaseAiDataSource _dataSource;
 
   Future<ReadingModel> getOrGenerateReading(GetReadingRequest request) async {
-    final Map<String, dynamic> json = await _dataSource.getOrGenerateReading(request);
-    return SoulMapper.toReading(ReadingResponse.fromJson(json));
+    final Map<String, dynamic> json = await _dataSource.getOrGenerateReading(
+      request,
+    );
+    return SoulMapper.toReading(
+      ReadingResponse.fromJson(json),
+      targetDate: request.targetDate == null
+          ? null
+          : DateTime(
+              request.targetDate!.year,
+              request.targetDate!.month,
+              request.targetDate!.day,
+            ),
+      targetPeriod: request.targetPeriod,
+    );
   }
 
-  Future<DailyUnlockResponse> unlockDailyBiorhythm(UnlockDailyBiorhythmRequest request) async {
-    final Map<String, dynamic> json = await _dataSource.unlockDailyBiorhythm(request);
+  Future<DailyUnlockResponse> unlockDailyBiorhythm(
+    UnlockDailyBiorhythmRequest request,
+  ) async {
+    final Map<String, dynamic> json = await _dataSource.unlockDailyBiorhythm(
+      request,
+    );
     return DailyUnlockResponse.fromJson(json);
   }
 }
-

@@ -6,6 +6,7 @@ import 'package:soulnum/src/locale/locale_key.dart';
 import 'package:soulnum/src/ui/widgets/app_card_section.dart';
 import 'package:soulnum/src/utils/app_colors.dart';
 import 'package:soulnum/src/utils/app_styles.dart';
+import 'package:soulnum/src/utils/reading_meta_formatter.dart';
 
 class DailyCycleUnlocked extends StatelessWidget {
   const DailyCycleUnlocked({super.key, required this.reading});
@@ -15,6 +16,9 @@ class DailyCycleUnlocked extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _DailyCycleViewModel viewModel = _DailyCycleViewModel.fromReading(
+      reading,
+    );
+    final ReadingScopeMeta? targetMeta = ReadingMetaFormatter.targetMeta(
       reading,
     );
 
@@ -31,6 +35,7 @@ class DailyCycleUnlocked extends StatelessWidget {
         _DailyCycleTitleCard(
           title: viewModel.title,
           generatedAt: viewModel.generatedAt,
+          targetMeta: targetMeta,
         ),
         10.height,
         _DailyCycleSectionCard(
@@ -77,10 +82,15 @@ class DailyCycleUnlocked extends StatelessWidget {
 }
 
 class _DailyCycleTitleCard extends StatelessWidget {
-  const _DailyCycleTitleCard({required this.title, required this.generatedAt});
+  const _DailyCycleTitleCard({
+    required this.title,
+    required this.generatedAt,
+    this.targetMeta,
+  });
 
   final String title;
   final DateTime generatedAt;
+  final ReadingScopeMeta? targetMeta;
 
   @override
   Widget build(BuildContext context) {
@@ -107,15 +117,39 @@ class _DailyCycleTitleCard extends StatelessWidget {
               color: AppColors.colorFBFC9DE.withValues(alpha: 0.78),
             ),
           ),
+          if (targetMeta != null) ...<Widget>[
+            8.height,
+            DecoratedBox(
+              decoration: BoxDecoration(
+                color: AppColors.authAccentViolet.withValues(alpha: 0.12),
+                borderRadius: 999.borderRadiusAll,
+                border: Border.all(
+                  color: AppColors.authAccentViolet.withValues(alpha: 0.28),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 6,
+                ),
+                child: Text(
+                  targetMeta!.pillText,
+                  style: AppStyles.bodySmall(
+                    color: AppColors.colorFBFC9DE,
+                    fontWeight: FontWeight.w500,
+                    height: 1.0,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );
   }
 
   String _formatGeneratedAt(DateTime value) {
-    String twoDigits(int number) => number.toString().padLeft(2, '0');
-    return '${twoDigits(value.day)}/${twoDigits(value.month)}/${value.year} • '
-        '${twoDigits(value.hour)}:${twoDigits(value.minute)}';
+    return ReadingMetaFormatter.formatGeneratedAt(value);
   }
 }
 

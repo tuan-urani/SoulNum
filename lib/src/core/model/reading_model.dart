@@ -7,6 +7,8 @@ class ReadingModel extends Equatable {
     required this.result,
     required this.generatedAt,
     required this.fromCache,
+    this.targetDate,
+    this.targetPeriod,
   });
 
   final String readingId;
@@ -14,14 +16,17 @@ class ReadingModel extends Equatable {
   final Map<String, dynamic> result;
   final DateTime generatedAt;
   final bool fromCache;
+  final DateTime? targetDate;
+  final String? targetPeriod;
 
   @override
   List<Object?> get props => <Object?>[
-        readingId,
-        featureKey,
-        result,
-        generatedAt,
-        fromCache,
-      ];
+    readingId,
+    featureKey,
+    result,
+    generatedAt,
+    fromCache,
+    targetDate,
+    targetPeriod,
+  ];
 }
-
