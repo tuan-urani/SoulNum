@@ -1,125 +1,128 @@
 # PHASE 9 – SUPABASE BACKEND IMPLEMENTATION
 
-## 1) Implementation Status
-- Target Supabase project id: `aauidavuipscnbmdhale`
-- Architecture source: [PHASE_8_TECH_ARCHITECTURE.md](/Users/uranidev/Documents/GitHub/SoulNum/PHASE_8_TECH_ARCHITECTURE.md)
-- Execution mode: Supabase MCP (initial provisioning on February 28, 2026, auth-mode updates on March 1, 2026)
-- Real implementation state:
-  - Remote migrations applied:
-    - `20260228142738_phase9_soulnum_backend_core`
-    - `20260228163605_phase9_phone_password_auth_alignment`
-    - `20260228163752_phase9_auth_method_normalization`
-    - `20260301022503_phase9_email_password_auth_alignment`
-    - `20260301022747_phase9_email_testing_auto_confirm_retry`
-  - Remote tables created in `public` schema (15 tables)
-  - Remote RLS + policies applied
-  - Remote Edge Functions deployed
-- Source artifacts in workspace:
-  - `supabase/migrations/20260228211000_phase9_soulnum_backend.sql`
-  - `supabase/migrations/20260228222000_phase9_phone_password_auth_alignment.sql`
-  - `supabase/migrations/20260228223000_phase9_auth_method_normalization.sql`
-  - `supabase/migrations/20260301022503_phase9_email_password_auth_alignment.sql`
-  - `supabase/migrations/20260301022747_phase9_email_testing_auto_confirm_retry.sql`
-  - `supabase/functions/*` (7 Edge Functions + shared modules)
-  - `supabase/config.toml`
-- Validation evidence from MCP:
-  - `get_project_url` -> `https://aauidavuipscnbmdhale.supabase.co`
-  - `list_migrations` includes:
-    - `phase9_soulnum_backend_core`
-    - `phase9_phone_password_auth_alignment`
-    - `phase9_auth_method_normalization`
-    - `phase9_email_password_auth_alignment`
-    - `phase9_email_testing_auto_confirm_retry`
-  - `list_tables` shows all expected `public` tables with `rls_enabled: true`
-  - `list_edge_functions` shows all required SoulNum function slugs as `ACTIVE`
+## 0) Document Metadata
+- Last Updated: 2026-03-02
+- Supabase Project ID: `aauidavuipscnbmdhale`
+- Architecture reference: `PHASE_8_TECH_ARCHITECTURE.md`
+- Verification basis for this document:
+  - repository migrations under `supabase/migrations/*`
+  - repository edge functions under `supabase/functions/*`
+  - Supabase project config in `supabase/config.toml`
 
-## 2) Created Database Schema (Implemented in Migration)
-Migration file: [20260228211000_phase9_soulnum_backend.sql](/Users/uranidev/Documents/GitHub/SoulNum/supabase/migrations/20260228211000_phase9_soulnum_backend.sql)
+This document reflects the implementation state tracked in source control. If remote dashboard state differs, treat that as environment drift and reconcile by migration/function deploy.
 
-### 2.1 Tables Created
+---
+
+## 1) Migration Ledger (Applied in Codebase)
+
+1. `20260228211000_phase9_soulnum_backend.sql`
+- Created core schema, constraints, indexes, RLS policies, triggers, and quota RPC.
+
+2. `20260228222000_phase9_phone_password_auth_alignment.sql`
+- Added `phone_e164`, `auth_method` and phone sync logic (legacy phase).
+
+3. `20260228223000_phase9_auth_method_normalization.sql`
+- Normalized `auth_method` defaults and update trigger behavior.
+
+4. `20260301022503_phase9_email_password_auth_alignment.sql`
+- Shifted auth metadata alignment to email/password (`email`, `auth_method`).
+
+5. `20260301022747_phase9_email_testing_auto_confirm_retry.sql`
+- Enabled testing-mode auto-confirm for email users.
+
+6. `20260301102000_phase10_gemini_context_warehouse.sql`
+- Added context warehouse + deterministic baseline tables.
+- Seeded global context blocks and 12 active prompts.
+
+---
+
+## 2) Database Provisioning State
+
+## 2.1 Tables Implemented
 1. `public.users`
 2. `public.user_profiles`
 3. `public.prompt_versions`
-4. `public.ai_generated_contents`
-5. `public.user_readings`
-6. `public.ai_context_memory`
-7. `public.ai_chat_sessions`
-8. `public.ai_chat_messages`
-9. `public.ai_usage_ledger`
-10. `public.subscriptions`
-11. `public.subscription_entitlements`
-12. `public.subscription_events`
-13. `public.rewarded_ad_events`
-14. `public.daily_biorhythm_unlocks`
-15. `public.profile_deletion_audits`
+4. `public.global_context_blocks`
+5. `public.profile_numerology_baselines`
+6. `public.ai_generated_contents`
+7. `public.user_readings`
+8. `public.ai_context_memory`
+9. `public.ai_chat_sessions`
+10. `public.ai_chat_messages`
+11. `public.ai_usage_ledger`
+12. `public.subscriptions`
+13. `public.subscription_entitlements`
+14. `public.subscription_events`
+15. `public.rewarded_ad_events`
+16. `public.daily_biorhythm_unlocks`
+17. `public.profile_deletion_audits`
 
-### 2.2 Relationship Highlights
-- Ownership root:
-  - `users.id` -> all user-owned tables (`user_id` / `owner_user_id`)
-- Profile-scoped data:
-  - `user_profiles.id` -> readings, memory, chat sessions, unlocks, ad events
-- AI artifact chain:
-  - `prompt_versions.id` -> `ai_generated_contents.prompt_version_id`
-  - `ai_generated_contents.id` -> `user_readings.ai_content_id`, `ai_chat_messages.ai_content_id`
-  - `user_readings.id` / `ai_generated_contents.id` -> `ai_context_memory.source_*`
-- Monetization:
-  - `subscriptions` + `subscription_events` + `subscription_entitlements`
-- Daily ad gate:
-  - `rewarded_ad_events.id` -> `daily_biorhythm_unlocks.ad_event_id`
+## 2.2 Table Purpose Mapping
+- User/Auth root: `users`
+- Profile domain: `user_profiles`, `profile_deletion_audits`
+- Prompt/context orchestration: `prompt_versions`, `global_context_blocks`, `profile_numerology_baselines`
+- AI artifact/memory: `ai_generated_contents`, `user_readings`, `ai_context_memory`
+- Chat domain: `ai_chat_sessions`, `ai_chat_messages`, `ai_usage_ledger`
+- Monetization domain: `subscriptions`, `subscription_entitlements`, `subscription_events`
+- Ad gate domain: `rewarded_ad_events`, `daily_biorhythm_unlocks`
 
-### 2.3 AI Memory Persistence Coverage
-- AI outputs stored in `ai_generated_contents`
-- User-facing result history in `user_readings`
-- Reusable cross-feature facts in `ai_context_memory`
+## 2.3 Ownership Model
+- User-owned data anchored to `users.id` and guarded by RLS.
+- Platform-owned config data (`prompt_versions`, `global_context_blocks`) is service-role controlled.
 
-### 2.4 Comments/Documentation in DB
-- Every table includes `comment on table ...` describing:
-  - table purpose
-  - feature mapping
-  - AI memory role
-  - usage intention
+## 2.4 Comments/Documentation in DB
+- Core migration includes `comment on table` and key `comment on column` entries for intent.
+- Newly added context tables also include purpose-oriented comments.
 
-### 2.5 Auth Metadata Alignment (Email + Password)
-- `public.users` has been extended with:
-  - `email text null`
-  - `phone_e164 text null`
-  - `auth_method text not null default 'unknown'`
-- Existing rows are backfilled from `auth.users.email`.
-- Legacy rows without email are normalized to `auth_method = 'unknown'`.
-- `handle_new_auth_user()` now writes `email` + `auth_method` during auth bootstrap.
-- Trigger `on_auth_user_updated` on `auth.users` now syncs from `email` changes.
-- `phone_e164` is retained as legacy metadata to avoid destructive schema changes.
+---
 
-### 2.6 Testing Mode (No Email Confirmation)
-- `handle_new_auth_user()` has test-mode logic to auto-set `auth.users.email_confirmed_at` for newly created email users.
-- Existing unconfirmed email users are backfilled to `email_confirmed_at = now()` in migration.
-- Result: testing signup/login can proceed without waiting for email confirmation flow.
+## 3) Relationships, Constraints, and Data Integrity
 
-## 3) RLS Rules Implemented
+## 3.1 Key Foreign-Key Chains
+1. `auth.users.id` -> `public.users.id`
+2. `users.id` -> user-owned tables (`user_profiles`, `ai_generated_contents`, `user_readings`, etc.)
+3. `prompt_versions.id` -> `ai_generated_contents.prompt_version_id`
+4. `ai_generated_contents.id` -> `user_readings.ai_content_id`, `ai_chat_messages.ai_content_id`
+5. `user_profiles.id` -> profile-scoped entities (`user_readings`, `ai_context_memory`, `daily_biorhythm_unlocks`, `profile_numerology_baselines`)
 
-### 3.1 RLS Enabled On
-- `users`
-- `user_profiles`
-- `prompt_versions`
-- `ai_generated_contents`
-- `user_readings`
-- `ai_context_memory`
-- `ai_chat_sessions`
-- `ai_chat_messages`
-- `ai_usage_ledger`
-- `subscriptions`
-- `subscription_entitlements`
-- `subscription_events`
-- `rewarded_ad_events`
-- `daily_biorhythm_unlocks`
-- `profile_deletion_audits`
+## 3.2 Integrity Constraints
+- Unique cache identity support:
+  - `ai_generated_contents(feature_key, prompt_version_id, input_hash)` index (lookup critical)
+- Memory uniqueness:
+  - `ai_context_memory unique(user_id, profile_id, memory_type, memory_key)`
+- Daily unlock idempotency:
+  - `daily_biorhythm_unlocks unique(user_id, profile_id, unlock_date)`
+- Quota ledger uniqueness:
+  - `ai_usage_ledger unique(user_id, usage_month, usage_type)`
+- Billing uniqueness:
+  - `subscriptions unique(provider, provider_original_tx_id)`
+- Baseline cache uniqueness:
+  - `profile_numerology_baselines unique(user_id, profile_id, calc_version)`
 
-### 3.2 Policy Strategy
-- Authenticated users can access only their own records (`auth.uid()` ownership checks).
-- `prompt_versions` is restricted to `service_role` policy.
-- Sensitive writes (usage/quota/billing sync) are intended through Edge Functions (service role client).
+## 3.3 Domain Check Constraints
+- `ai_chat_messages.role in ('user','assistant','system')`
+- `ai_chat_sessions.status in ('active','closed','expired')`
+- `global_context_blocks.scope in ('global','feature')`
+- Conditional scope-feature consistency on `global_context_blocks`
 
-### 3.3 Key Policy Groups Created
+---
+
+## 4) RLS Implementation State
+
+## 4.1 RLS Enabled
+RLS is enabled on all 17 public tables.
+
+## 4.2 User-Owned Policy Pattern
+- `select/update/delete` policies typically enforce `user_id = auth.uid()`.
+- `insert` policies enforce ownership with `with check` clauses.
+- `user_profiles` uses `owner_user_id = auth.uid()`.
+
+## 4.3 Service-Only Policy Pattern
+- `prompt_versions_service_only`
+- `global_context_blocks_service_only`
+- `profile_baselines_service_only` (in addition to user policies)
+
+## 4.4 Policy Groups (Implemented)
 - `users_select_own`, `users_update_own`
 - `user_profiles_*_own`
 - `ai_generated_*_own`
@@ -134,191 +137,182 @@ Migration file: [20260228211000_phase9_soulnum_backend.sql](/Users/uranidev/Docu
 - `rewarded_events_select_own`, `rewarded_events_insert_own`
 - `daily_unlocks_*_own`
 - `profile_delete_audit_select_own`
-- `prompt_versions_service_only`
-
-## 4) Indexing & Performance (Implemented)
-
-### 4.1 User/Feature/Created-At Oriented Indexes
-- `ai_generated_contents(user_id, feature_key, generated_at desc)`
-- `user_readings(user_id, feature_key, created_at desc)`
-- `user_readings(profile_id, feature_key, created_at desc)`
-- `ai_context_memory(user_id, created_at desc)`
-- `ai_chat_messages(user_id, created_at desc)`
-
-### 4.2 Additional Retrieval/Integrity Indexes
-- Cache lookup:
-  - `ai_generated_contents(feature_key, prompt_version_id, input_hash)`
-- Quota:
-  - `ai_usage_ledger(user_id, usage_month desc)` + unique `(user_id, usage_month, usage_type)`
-- Daily unlock idempotency:
-  - unique `(user_id, profile_id, unlock_date)`
-- Subscription lookup:
-  - unique `(provider, provider_original_tx_id)`
-
-## 5) SQL Functions/Triggers Implemented
-- `tg_set_updated_at()` trigger helper
-- `handle_new_auth_user()` auth bootstrap:
-  - creates `public.users` row
-  - stores auth metadata (`email`, `auth_method`)
-  - seeds `subscription_entitlements` default free tier
-  - auto-confirms email accounts in testing mode (`email_confirmed_at`)
-- `handle_auth_user_updated()`:
-  - syncs `public.users.email` from `auth.users.email` after updates
-- `increment_ai_usage_if_available(...)`:
-  - atomic quota increment
-  - hard limit enforcement
-  - blocked counter increment on exhaustion
-
-## 6) Edge Functions Implemented
-
-## 6.1 Shared Gateway Modules
-- [http.ts](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/_shared/http.ts)
-- [supabase.ts](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/_shared/supabase.ts)
-- [gemini.ts](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/_shared/gemini.ts)
-- [prompt.ts](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/_shared/prompt.ts)
-- [memory.ts](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/_shared/memory.ts)
-- [domain.ts](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/_shared/domain.ts)
-- [hash.ts](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/_shared/hash.ts)
-
-### 6.2 Function List
-1. [fn_get_or_generate_reading](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/fn_get_or_generate_reading/index.ts)
-2. [fn_chat_with_guide](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/fn_chat_with_guide/index.ts)
-3. [fn_unlock_daily_biorhythm](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/fn_unlock_daily_biorhythm/index.ts)
-4. [fn_sync_subscription](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/fn_sync_subscription/index.ts)
-5. [fn_delete_profile_permanently](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/fn_delete_profile_permanently/index.ts)
-6. [fn_get_history_feed](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/fn_get_history_feed/index.ts)
-7. [fn_compact_context_memory](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/fn_compact_context_memory/index.ts)
-
-### 6.3 AI Gateway Behavior
-- Gemini is called only inside Edge Functions (`_shared/gemini.ts`)
-- No Gemini API key exposure to Flutter client
-- Prompt version is fetched from `prompt_versions`
-- AI outputs are persisted before returning where applicable
-
-### 6.4 AI Context Persistence Implementation
-- `fn_get_or_generate_reading`:
-  - writes `ai_generated_contents`
-  - writes `user_readings`
-  - extracts/upserts `ai_context_memory`
-- `fn_chat_with_guide`:
-  - writes `ai_generated_contents`
-  - writes chat transcript
-  - consumes hard quota via SQL function
-  - upserts `ai_context_memory`
-
-## 7) AI Execution Flow (Implemented)
-1. Client calls Edge Function with Supabase JWT.
-2. Function authenticates and resolves `user_id`.
-3. Function loads owned profile + entitlement + memory context.
-4. Function resolves active prompt version by feature.
-5. Function builds payload and calls Gemini server-side.
-6. Function normalizes response JSON.
-7. Function persists AI artifact + reading/chat + memory facts.
-8. Function returns structured response to mobile app.
-
-## 8) Supabase Project Config
-- [supabase/config.toml](/Users/uranidev/Documents/GitHub/SoulNum/supabase/config.toml)
-  - project id set to `aauidavuipscnbmdhale`
-  - JWT verification enabled for user-invoked functions
-  - cron function (`fn_compact_context_memory`) with `verify_jwt = false`
-
-## 9) Environment Variables Required for Deployment
-- `SUPABASE_URL`
-- `SUPABASE_ANON_KEY`
-- `SUPABASE_SERVICE_ROLE_KEY`
-- `GEMINI_API_KEY`
-- `VIP_CHATBOT_MONTHLY_LIMIT` (optional, default used when absent)
-- `BILLING_VERIFY_URL` (optional; if absent, sync function runs in mock verification mode)
-- `CRON_SECRET` (for scheduled memory compaction endpoint)
-
-## 10) Deployment Notes
-Deployment via Supabase MCP has been executed directly on project `aauidavuipscnbmdhale`.
-
-Current deployed function slugs:
-- `fn_get_or_generate_reading`
-- `fn_chat_with_guide`
-- `fn_unlock_daily_biorhythm`
-- `fn_sync_subscription`
-- `fn_delete_profile_permanently`
-- `fn_get_history_feed`
-- `fn_compact_context_memory`
-
-Additional note:
-- A temporary validation function `zz_path_test` was created to verify MCP path bundling before production deploys.
-- It is unrelated to SoulNum business logic and can be removed manually from Supabase dashboard if you want a clean function list.
-- Authentication mode on backend is aligned to email/password metadata.
-- Testing mode currently bypasses email confirmation through DB-side auto-confirm logic in `handle_new_auth_user()`.
-- For production hardening, remove this auto-confirm logic and re-enable email confirmation flow.
-
-## 11) Backend Reasoning Summary
-- The schema is AI-memory-first:
-  - generated artifacts + user-visible readings + reusable memory facts are separate but linked.
-- Monetization constraints are enforced server-side:
-  - VIP entitlement checks
-  - hard monthly chat quota
-  - ad-gated daily unlock for free users
-- Security posture:
-  - RLS for user isolation
-  - Gemini key server-side only
-  - service-role only for privileged prompt and quota paths
+- `profile_baselines_*_own` + `profile_baselines_service_only`
 
 ---
 
-## 12) Phase 10 Gemini Plan Execution Update (2026-03-01)
+## 5) Indexing & Performance State
 
-### 12.1 Migrations Applied to Project `aauidavuipscnbmdhale`
-1. `phase10_context_baseline_tables`
-   - created `public.global_context_blocks`
-   - created `public.profile_numerology_baselines`
-   - applied RLS + policies + indexes + updated_at triggers
-2. `phase10_seed_prompt_and_context`
-   - seeded global context blocks (`global + feature`)
-   - seeded 12 active feature prompts in `public.prompt_versions`
-   - all seeded prompts use strict JSON schema + `gemini-2.5-flash`
+## 5.1 Core Retrieval Indexes
+- `idx_user_profiles_owner`
+- `idx_user_profiles_owner_active`
+- `idx_prompt_versions_feature_active`
+- `idx_ai_generated_user_feature_generated_at`
+- `idx_ai_generated_feature_prompt_hash`
+- `idx_ai_generated_user_generated_at`
+- `idx_user_readings_user_feature_created_at`
+- `idx_user_readings_profile_feature_created_at`
+- `idx_user_readings_user_created_at`
+- `idx_ai_context_memory_user_profile_active`
+- `idx_ai_context_memory_user_last_used`
+- `idx_ai_context_memory_user_created`
+- `idx_ai_chat_sessions_user_started`
+- `idx_ai_chat_sessions_profile_started`
+- `idx_ai_chat_messages_session_created`
+- `idx_ai_chat_messages_user_created`
+- `idx_ai_usage_ledger_user_month`
+- `idx_subscriptions_user_status_period_end`
+- `idx_subscription_events_user_event_time`
+- `idx_rewarded_ad_events_user_profile_occurred`
+- `idx_daily_biorhythm_unlocks_user_date`
+- `idx_profile_deletion_audits_user_deleted`
 
-### 12.2 Remote Verification Snapshot
-1. Prompt active count: exactly 1 active row for each of 12 features:
-   - `core_numbers`, `psych_matrix`, `birth_chart`, `energy_boost`,
-   - `four_peaks`, `four_challenges`,
-   - `biorhythm_daily`,
-   - `forecast_day`, `forecast_month`, `forecast_year`,
-   - `compatibility`, `chat_assistant`.
-2. Global context blocks active:
-   - 1 global block
-   - 12 feature blocks
-3. New indexes present:
-   - `idx_global_context_blocks_lookup`
-   - `idx_global_context_blocks_updated_at`
-   - `idx_profile_numerology_baselines_user_updated`
-   - `idx_profile_numerology_baselines_profile_calc`
+## 5.2 Context-Warehouse Indexes
+- `idx_global_context_blocks_lookup`
+- `idx_global_context_blocks_updated_at`
+- `idx_profile_numerology_baselines_user_updated`
+- `idx_profile_numerology_baselines_profile_calc`
 
-### 12.3 Edge Function Source Implemented (Repo State)
-1. Updated:
-   - [supabase/functions/_shared/gemini.ts](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/_shared/gemini.ts)
-   - [supabase/functions/_shared/prompt.ts](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/_shared/prompt.ts)
-   - [supabase/functions/_shared/memory.ts](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/_shared/memory.ts)
-   - [supabase/functions/fn_get_or_generate_reading/index.ts](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/fn_get_or_generate_reading/index.ts)
-   - [supabase/functions/fn_chat_with_guide/index.ts](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/fn_chat_with_guide/index.ts)
-2. Added:
-   - [supabase/functions/_shared/context.ts](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/_shared/context.ts)
-   - [supabase/functions/_shared/baseline.ts](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/_shared/baseline.ts)
-   - [supabase/functions/_shared/numerology.ts](/Users/uranidev/Documents/GitHub/SoulNum/supabase/functions/_shared/numerology.ts)
+---
 
-### 12.4 Deployment Status Note (Important)
-1. Supabase MCP deploy succeeds for new slugs with the updated bundle (validated via test slug `zz_full_compile`).
-2. Supabase MCP currently returns `Function deploy failed due to an internal error` when attempting to update the two existing production slugs:
-   - `fn_get_or_generate_reading`
-   - `fn_chat_with_guide`
-3. Therefore:
-   - DB/migration state is fully applied on project.
-   - Updated AI orchestration code is present in repository.
-   - Direct in-place overwrite of the two old slugs is blocked by MCP deployment behavior at this time.
+## 6) SQL Functions and Triggers
 
-### 12.5 Temporary MCP Validation Functions Present
-The following MCP validation slugs exist in project and are not part of business scope:
-1. `zz_path_test`
-2. `zz_compile_test`
-3. `zz_compile_test2`
-4. `zz_full_compile`
+## 6.1 Trigger Utilities
+- `public.tg_set_updated_at()` for `updated_at` consistency.
 
-They can be deleted manually in Supabase dashboard after final production function rollout.
+## 6.2 Auth Bootstrap and Sync
+- `public.handle_new_auth_user()`:
+  - ensures `public.users` row
+  - seeds default free entitlement row
+  - in current testing setup, auto-confirms email users
+- `public.handle_auth_user_updated()`:
+  - syncs `public.users.email` and `auth_method` from `auth.users.email`
+
+## 6.3 Quota RPC
+- `public.increment_ai_usage_if_available(...)`
+- Behavior:
+  - atomic usage increment under quota
+  - increments blocked counter when exhausted
+  - returns `(allowed, used_count, blocked_count, quota_limit)`
+
+---
+
+## 7) Edge Functions Implemented
+
+## 7.1 Shared Modules
+- `_shared/http.ts`
+- `_shared/supabase.ts`
+- `_shared/domain.ts`
+- `_shared/hash.ts`
+- `_shared/prompt.ts`
+- `_shared/gemini.ts`
+- `_shared/memory.ts`
+- `_shared/context.ts`
+- `_shared/baseline.ts`
+- `_shared/numerology.ts`
+
+## 7.2 Business Functions
+1. `fn_get_or_generate_reading`
+- Reading orchestration with cache, Gemini call, schema validation, persistence, memory upsert.
+
+2. `fn_chat_with_guide`
+- VIP-only chatbot, session handling, quota enforcement, persistence.
+
+3. `fn_unlock_daily_biorhythm`
+- VIP/ad-gated daily unlock handling.
+
+4. `fn_sync_subscription`
+- Billing verification + subscription/entitlement synchronization.
+
+5. `fn_get_history_feed`
+- Paginated reading history endpoint.
+
+6. `fn_delete_profile_permanently`
+- Hard-delete profile-related data and maintain audit trail.
+
+7. `fn_compact_context_memory`
+- Cron-protected cleanup of stale context memory.
+
+## 7.3 JWT Verification Configuration
+From `supabase/config.toml`:
+- `verify_jwt = true` for all user-invoked business functions.
+- `verify_jwt = false` only for `fn_compact_context_memory` (cron path), with `x-cron-secret` check.
+
+---
+
+## 8) AI Context Persistence and Reuse (Implemented)
+
+1. Artifact persistence:
+- `ai_generated_contents` stores raw and structured AI result + token metadata.
+
+2. User-facing history:
+- `user_readings` stores snapshots and source type (`cached` or `ai_orchestrated`).
+
+3. Long-term memory:
+- `ai_context_memory` stores normalized memory facts with confidence and activity status.
+
+4. Deterministic baseline reuse:
+- `profile_numerology_baselines` caches deterministic numerology outputs by profile.
+
+5. Global context reuse:
+- `global_context_blocks` supplies platform/feature-level guidance for prompt construction.
+
+---
+
+## 9) PromptOps and Seeded Runtime State
+
+From migration `20260301102000_phase10_gemini_context_warehouse.sql`:
+1. 1 global context block + 12 feature context blocks seeded (`vi-VN`).
+2. 12 active prompts seeded for:
+- `core_numbers`
+- `psych_matrix`
+- `birth_chart`
+- `energy_boost`
+- `four_peaks`
+- `four_challenges`
+- `biorhythm_daily`
+- `forecast_day`
+- `forecast_month`
+- `forecast_year`
+- `compatibility`
+- `chat_assistant`
+3. Seeded model is `gemini-2.5-flash` for all feature prompts.
+4. `response_schema` is stored per prompt and validated server-side.
+
+Note: Gemini API currently rejects some JSON Schema keywords (e.g., `additionalProperties`) at request level; `_shared/gemini.ts` sanitizes schema before sending while still enforcing strict server-side validation on response.
+
+---
+
+## 10) Auth Mode State (Current)
+
+1. Auth flow is email/password.
+2. `public.users` retains legacy `phone_e164` field for backward compatibility.
+3. `auth_method` normalized for email mode (`email_password` or `unknown`).
+4. Testing mode auto-confirm is enabled by migration logic.
+
+---
+
+## 11) Known Drift / Reconciliation Items
+
+1. Flutter constants currently call:
+- `fn_chat_with_guide_open`
+- `fn_unlock_daily_biorhythm_open`
+- `fn_sync_subscription_open`
+
+2. Repository function source currently tracks canonical slugs without `_open`.
+
+3. Reconciliation options:
+- Option A: add `_open` function sources + config to repo and keep client unchanged.
+- Option B: switch Flutter to canonical slugs and remove `_open` aliases from runtime.
+
+4. Until reconciled, backend docs and runtime can diverge even when source-control docs are correct.
+
+---
+
+## 12) Implementation Notes
+
+1. Gemini key remains server-side only via Supabase secrets.
+2. AI generation requests are never sent directly from Flutter to Gemini.
+3. Monetization gates (VIP, quota, ad unlock) are enforced in Edge Functions and DB/RPC logic.
+4. For production hardening, disable testing auto-confirm and enforce full email verification.
+

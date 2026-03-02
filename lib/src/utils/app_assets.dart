@@ -9,6 +9,6 @@ class AppAssets {
       'assets/images/icons/radio_check.svg';
   static const String iconsRadioUncheckSvg =
       'assets/images/icons/radio_uncheck.svg';
-  static const String iconsHideEyeSvg = 'assets/images/icons/hide_eye.svg';
-  static const String iconsShowEyeSvg = 'assets/images/icons/show_eye.svg';
+  static const String iconsHideEyeSvg = 'assets/icons/hide_eye.svg';
+  static const String iconsShowEyeSvg = 'assets/icons/show_eye.svg';
 }
