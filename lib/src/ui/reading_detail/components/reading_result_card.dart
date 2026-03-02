@@ -263,39 +263,39 @@ class _CoreNumbersResultCard extends StatelessWidget {
             content: actionText,
           ),
           24.height,
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: _ModuleNavButton(
-                  label: LocaleKey.readingCoreNumbersPrevModule.tr,
-                  onPressed: () {
-                    if (Navigator.of(context).canPop()) {
-                      Get.back<void>();
-                      return;
-                    }
-                    Get.offAllNamed(AppPages.home);
-                  },
-                  isPrimary: false,
-                ),
-              ),
-              10.width,
-              Expanded(
-                child: _ModuleNavButton(
-                  label: LocaleKey.readingCoreNumbersNextModule.tr,
-                  onPressed: () {
-                    Get.offNamed(
-                      AppPages.readingDetail,
-                      arguments: <String, dynamic>{
-                        'feature_key': FeatureKeys.psychMatrix,
-                        'title_key': LocaleKey.homePsychMatrix,
-                      },
-                    );
-                  },
-                  isPrimary: true,
-                ),
-              ),
-            ],
-          ),
+          // Row(
+          //   children: <Widget>[
+          //     Expanded(
+          //       child: _ModuleNavButton(
+          //         label: LocaleKey.readingCoreNumbersPrevModule.tr,
+          //         onPressed: () {
+          //           if (Navigator.of(context).canPop()) {
+          //             Get.back<void>();
+          //             return;
+          //           }
+          //           Get.offAllNamed(AppPages.home);
+          //         },
+          //         isPrimary: false,
+          //       ),
+          //     ),
+          //     10.width,
+          //     Expanded(
+          //       child: _ModuleNavButton(
+          //         label: LocaleKey.readingCoreNumbersNextModule.tr,
+          //         onPressed: () {
+          //           Get.offNamed(
+          //             AppPages.readingDetail,
+          //             arguments: <String, dynamic>{
+          //               'feature_key': FeatureKeys.psychMatrix,
+          //               'title_key': LocaleKey.homePsychMatrix,
+          //             },
+          //           );
+          //         },
+          //         isPrimary: true,
+          //       ),
+          //     ),
+          //   ],
+          // ),
         ],
       ),
     );
@@ -358,33 +358,33 @@ class _PsychMatrixResultCard extends StatelessWidget {
           10.height,
           _PsychDeepInterpretationCard(content: viewModel.deepInterpretation),
           24.height,
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: _ModuleNavButton(
-                  label: LocaleKey.readingPsychMatrixBackHome.tr,
-                  onPressed: () => Get.offAllNamed(AppPages.home),
-                  isPrimary: false,
-                ),
-              ),
-              10.width,
-              Expanded(
-                child: _ModuleNavButton(
-                  label: LocaleKey.readingPsychMatrixNextSuggestion.tr,
-                  onPressed: () {
-                    Get.offNamed(
-                      AppPages.readingDetail,
-                      arguments: <String, dynamic>{
-                        'feature_key': FeatureKeys.birthChart,
-                        'title_key': LocaleKey.homeBirthChart,
-                      },
-                    );
-                  },
-                  isPrimary: true,
-                ),
-              ),
-            ],
-          ),
+          // Row(
+          //   children: <Widget>[
+          //     Expanded(
+          //       child: _ModuleNavButton(
+          //         label: LocaleKey.readingPsychMatrixBackHome.tr,
+          //         onPressed: () => Get.offAllNamed(AppPages.home),
+          //         isPrimary: false,
+          //       ),
+          //     ),
+          //     10.width,
+          //     Expanded(
+          //       child: _ModuleNavButton(
+          //         label: LocaleKey.readingPsychMatrixNextSuggestion.tr,
+          //         onPressed: () {
+          //           Get.offNamed(
+          //             AppPages.readingDetail,
+          //             arguments: <String, dynamic>{
+          //               'feature_key': FeatureKeys.birthChart,
+          //               'title_key': LocaleKey.homeBirthChart,
+          //             },
+          //           );
+          //         },
+          //         isPrimary: true,
+          //       ),
+          //     ),
+          //   ],
+          // ),
         ],
       ),
     );
@@ -691,33 +691,33 @@ class _BirthChartResultCard extends StatelessWidget {
           10.height,
           _BirthMissingCard(content: viewModel.missingHighlight),
           24.height,
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: _ModuleNavButton(
-                  label: LocaleKey.readingBirthChartBackHome.tr,
-                  onPressed: () => Get.offAllNamed(AppPages.home),
-                  isPrimary: false,
-                ),
-              ),
-              10.width,
-              Expanded(
-                child: _ModuleNavButton(
-                  label: LocaleKey.readingBirthChartNextEnergy.tr,
-                  onPressed: () {
-                    Get.offNamed(
-                      AppPages.readingDetail,
-                      arguments: <String, dynamic>{
-                        'feature_key': FeatureKeys.energyBoost,
-                        'title_key': LocaleKey.homeEnergyBoost,
-                      },
-                    );
-                  },
-                  isPrimary: true,
-                ),
-              ),
-            ],
-          ),
+          // Row(
+          //   children: <Widget>[
+          //     Expanded(
+          //       child: _ModuleNavButton(
+          //         label: LocaleKey.readingBirthChartBackHome.tr,
+          //         onPressed: () => Get.offAllNamed(AppPages.home),
+          //         isPrimary: false,
+          //       ),
+          //     ),
+          //     10.width,
+          //     Expanded(
+          //       child: _ModuleNavButton(
+          //         label: LocaleKey.readingBirthChartNextEnergy.tr,
+          //         onPressed: () {
+          //           Get.offNamed(
+          //             AppPages.readingDetail,
+          //             arguments: <String, dynamic>{
+          //               'feature_key': FeatureKeys.energyBoost,
+          //               'title_key': LocaleKey.homeEnergyBoost,
+          //             },
+          //           );
+          //         },
+          //         isPrimary: true,
+          //       ),
+          //     ),
+          //   ],
+          // ),
         ],
       ),
     );
@@ -1021,25 +1021,25 @@ class _EnergyBoostResultCard extends StatelessWidget {
             collapsedMaxLines: 3,
           ),
           24.height,
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: _ModuleNavButton(
-                  label: LocaleKey.readingEnergyBoostBackHome.tr,
-                  onPressed: () => Get.offAllNamed(AppPages.home),
-                  isPrimary: false,
-                ),
-              ),
-              10.width,
-              Expanded(
-                child: _ModuleNavButton(
-                  label: LocaleKey.readingEnergyBoostApplyNow.tr,
-                  onPressed: () {},
-                  isPrimary: true,
-                ),
-              ),
-            ],
-          ),
+          // Row(
+          //   children: <Widget>[
+          //     Expanded(
+          //       child: _ModuleNavButton(
+          //         label: LocaleKey.readingEnergyBoostBackHome.tr,
+          //         onPressed: () => Get.offAllNamed(AppPages.home),
+          //         isPrimary: false,
+          //       ),
+          //     ),
+          //     10.width,
+          //     Expanded(
+          //       child: _ModuleNavButton(
+          //         label: LocaleKey.readingEnergyBoostApplyNow.tr,
+          //         onPressed: () {},
+          //         isPrimary: true,
+          //       ),
+          //     ),
+          //   ],
+          // ),
         ],
       ),
     );
@@ -1149,33 +1149,33 @@ class _FourPeaksResultCard extends StatelessWidget {
             ),
           ),
           14.height,
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: _ModuleNavButton(
-                  label: LocaleKey.readingFourPeaksBackHome.tr,
-                  onPressed: () => Get.offAllNamed(AppPages.home),
-                  isPrimary: false,
-                ),
-              ),
-              10.width,
-              Expanded(
-                child: _ModuleNavButton(
-                  label: LocaleKey.readingFourPeaksNextChallenges.tr,
-                  onPressed: () {
-                    Get.offNamed(
-                      AppPages.readingDetail,
-                      arguments: <String, dynamic>{
-                        'feature_key': FeatureKeys.fourChallenges,
-                        'title_key': LocaleKey.homeFourChallenges,
-                      },
-                    );
-                  },
-                  isPrimary: true,
-                ),
-              ),
-            ],
-          ),
+          // Row(
+          //   children: <Widget>[
+          //     Expanded(
+          //       child: _ModuleNavButton(
+          //         label: LocaleKey.readingFourPeaksBackHome.tr,
+          //         onPressed: () => Get.offAllNamed(AppPages.home),
+          //         isPrimary: false,
+          //       ),
+          //     ),
+          //     10.width,
+          //     Expanded(
+          //       child: _ModuleNavButton(
+          //         label: LocaleKey.readingFourPeaksNextChallenges.tr,
+          //         onPressed: () {
+          //           Get.offNamed(
+          //             AppPages.readingDetail,
+          //             arguments: <String, dynamic>{
+          //               'feature_key': FeatureKeys.fourChallenges,
+          //               'title_key': LocaleKey.homeFourChallenges,
+          //             },
+          //           );
+          //         },
+          //         isPrimary: true,
+          //       ),
+          //     ),
+          //   ],
+          // ),
         ],
       ),
     );
@@ -1237,25 +1237,25 @@ class _FourChallengesResultCard extends StatelessWidget {
             collapsedMaxLines: 3,
           ),
           24.height,
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: _ModuleNavButton(
-                  label: LocaleKey.readingFourChallengesBackHome.tr,
-                  onPressed: () => Get.offAllNamed(AppPages.home),
-                  isPrimary: false,
-                ),
-              ),
-              10.width,
-              Expanded(
-                child: _ModuleNavButton(
-                  label: LocaleKey.readingFourChallengesToChatbot.tr,
-                  onPressed: () => Get.toNamed(AppPages.aiChat),
-                  isPrimary: true,
-                ),
-              ),
-            ],
-          ),
+          // Row(
+          //   children: <Widget>[
+          //     Expanded(
+          //       child: _ModuleNavButton(
+          //         label: LocaleKey.readingFourChallengesBackHome.tr,
+          //         onPressed: () => Get.offAllNamed(AppPages.home),
+          //         isPrimary: false,
+          //       ),
+          //     ),
+          //     10.width,
+          //     Expanded(
+          //       child: _ModuleNavButton(
+          //         label: LocaleKey.readingFourChallengesToChatbot.tr,
+          //         onPressed: () => Get.toNamed(AppPages.aiChat),
+          //         isPrimary: true,
+          //       ),
+          //     ),
+          //   ],
+          // ),
         ],
       ),
     );
@@ -1334,25 +1334,25 @@ class _ForecastResultCard extends StatelessWidget {
           10.height,
           _ForecastActionsCard(actions: viewModel.actions),
           24.height,
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: _ModuleNavButton(
-                  label: LocaleKey.readingForecastBackHome.tr,
-                  onPressed: () => Get.offAllNamed(AppPages.home),
-                  isPrimary: false,
-                ),
-              ),
-              10.width,
-              Expanded(
-                child: _ModuleNavButton(
-                  label: viewModel.nextCtaLabel,
-                  onPressed: viewModel.onNext,
-                  isPrimary: true,
-                ),
-              ),
-            ],
-          ),
+          // Row(
+          //   children: <Widget>[
+          //     Expanded(
+          //       child: _ModuleNavButton(
+          //         label: LocaleKey.readingForecastBackHome.tr,
+          //         onPressed: () => Get.offAllNamed(AppPages.home),
+          //         isPrimary: false,
+          //       ),
+          //     ),
+          //     10.width,
+          //     Expanded(
+          //       child: _ModuleNavButton(
+          //         label: viewModel.nextCtaLabel,
+          //         onPressed: viewModel.onNext,
+          //         isPrimary: true,
+          //       ),
+          //     ),
+          //   ],
+          // ),
         ],
       ),
     );

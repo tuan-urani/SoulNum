@@ -91,6 +91,32 @@ final Map<String, String> enUs = <String, String>{
   LocaleKey.homeSelectActiveProfileDescription:
       'Choose one active profile to unlock numerology features like Core Numbers, Psych Matrix, and Forecast.',
   LocaleKey.homeSelectActiveProfileAction: 'Select active profile',
+  LocaleKey.homeFeatureProfileSummaryHint:
+      'Review your active profile and switch profile context quickly.',
+  LocaleKey.homeFeatureCoreNumbersHint:
+      'Reveal your life path, mission, and core personality pattern.',
+  LocaleKey.homeFeaturePsychMatrixHint:
+      'Analyze psychological matrix clusters and key energy balance.',
+  LocaleKey.homeFeatureBirthChartHint:
+      'Decode birth date chart strengths and latent potentials.',
+  LocaleKey.homeFeatureEnergyBoostHint:
+      'Spot dominant energy and areas that need rebalancing.',
+  LocaleKey.homeFeatureCompatibilityHint:
+      'Check harmony level between two selected profiles.',
+  LocaleKey.homeFeatureFourPeaksHint:
+      'Track four major life peak phases across your timeline.',
+  LocaleKey.homeFeatureFourChallengesHint:
+      'Understand four life challenges and suggested responses.',
+  LocaleKey.homeFeatureDailyBiorhythmHint:
+      'Monitor your daily rhythm cycles for better timing.',
+  LocaleKey.homeFeatureForecastDayHint:
+      'Read today’s numerology trend and focus direction.',
+  LocaleKey.homeFeatureForecastMonthHint:
+      'View monthly trend, momentum, and practical opportunities.',
+  LocaleKey.homeFeatureForecastYearHint:
+      'See your yearly cycle theme and long-range direction.',
+  LocaleKey.homeFeatureVipChatHint:
+      'Ask AI for deeper personalized guidance from your profile.',
   LocaleKey.profileManagerTitle: 'Profile Manager',
   LocaleKey.profileCreateTitle: 'Create Profile',
   LocaleKey.profileDetailTitle: 'Profile Details',

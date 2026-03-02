@@ -24,10 +24,9 @@ class AppScreenScaffold extends StatelessWidget {
       backgroundColor: AppColors.black,
       appBar: AppBar(
         backgroundColor: AppColors.black,
-        title: Text(
-          title,
-          style: AppStyles.h5(color: AppColors.white),
-        ),
+        foregroundColor: AppColors.white,
+        iconTheme: const IconThemeData(color: AppColors.white),
+        title: Text(title, style: AppStyles.h5(color: AppColors.white)),
         actions: actions,
       ),
       body: SafeArea(
@@ -37,10 +36,7 @@ class AppScreenScaffold extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: <Color>[
-                Color(0xFF0F1020),
-                Color(0xFF0A0A14),
-              ],
+              colors: <Color>[Color(0xFF0F1020), Color(0xFF0A0A14)],
             ),
           ),
           child: child,
@@ -50,4 +46,3 @@ class AppScreenScaffold extends StatelessWidget {
     );
   }
 }
-

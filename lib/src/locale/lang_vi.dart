@@ -89,6 +89,32 @@ final Map<String, String> viVn = <String, String>{
   LocaleKey.homeSelectActiveProfileDescription:
       'Hãy chọn một hồ sơ đang dùng để mở khóa các chức năng thần số học như Con số cốt lõi, Ma trận tâm lý và Dự đoán.',
   LocaleKey.homeSelectActiveProfileAction: 'Chọn hồ sơ đang dùng',
+  LocaleKey.homeFeatureProfileSummaryHint:
+      'Xem nhanh hồ sơ hiện tại và chuyển hồ sơ đang dùng.',
+  LocaleKey.homeFeatureCoreNumbersHint:
+      'Giải mã đường đời, sứ mệnh và bản chất cốt lõi của bạn.',
+  LocaleKey.homeFeaturePsychMatrixHint:
+      'Phân tích ma trận tâm lý theo các cụm năng lượng chính.',
+  LocaleKey.homeFeatureBirthChartHint:
+      'Đọc biểu đồ ngày sinh để nhận ra tiềm năng nổi bật.',
+  LocaleKey.homeFeatureEnergyBoostHint:
+      'Xác định điểm mạnh và vùng năng lượng cần cân bằng.',
+  LocaleKey.homeFeatureCompatibilityHint:
+      'Đánh giá độ hòa hợp giữa hai hồ sơ người dùng.',
+  LocaleKey.homeFeatureFourPeaksHint:
+      'Theo dõi 4 giai đoạn đỉnh cao quan trọng trong cuộc đời.',
+  LocaleKey.homeFeatureFourChallengesHint:
+      'Nhận diện 4 thử thách lớn và hướng vượt qua phù hợp.',
+  LocaleKey.homeFeatureDailyBiorhythmHint:
+      'Cập nhật nhịp sinh học hằng ngày để chủ động kế hoạch.',
+  LocaleKey.homeFeatureForecastDayHint:
+      'Dự đoán xu hướng năng lượng và trọng tâm của hôm nay.',
+  LocaleKey.homeFeatureForecastMonthHint:
+      'Dự đoán nhịp phát triển và cơ hội của tháng hiện tại.',
+  LocaleKey.homeFeatureForecastYearHint:
+      'Dự đoán bức tranh tổng quan theo chu kỳ cả năm.',
+  LocaleKey.homeFeatureVipChatHint:
+      'Trò chuyện AI chuyên sâu để hiểu rõ bản thân hơn.',
   LocaleKey.profileManagerTitle: 'Quản lý hồ sơ',
   LocaleKey.profileCreateTitle: 'Tạo hồ sơ',
   LocaleKey.profileDetailTitle: 'Chi tiết hồ sơ',

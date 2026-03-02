@@ -95,6 +95,30 @@ class LocaleKey {
       'home_select_active_profile_description';
   static const String homeSelectActiveProfileAction =
       'home_select_active_profile_action';
+  static const String homeFeatureProfileSummaryHint =
+      'home_feature_profile_summary_hint';
+  static const String homeFeatureCoreNumbersHint =
+      'home_feature_core_numbers_hint';
+  static const String homeFeaturePsychMatrixHint =
+      'home_feature_psych_matrix_hint';
+  static const String homeFeatureBirthChartHint =
+      'home_feature_birth_chart_hint';
+  static const String homeFeatureEnergyBoostHint =
+      'home_feature_energy_boost_hint';
+  static const String homeFeatureCompatibilityHint =
+      'home_feature_compatibility_hint';
+  static const String homeFeatureFourPeaksHint = 'home_feature_four_peaks_hint';
+  static const String homeFeatureFourChallengesHint =
+      'home_feature_four_challenges_hint';
+  static const String homeFeatureDailyBiorhythmHint =
+      'home_feature_daily_biorhythm_hint';
+  static const String homeFeatureForecastDayHint =
+      'home_feature_forecast_day_hint';
+  static const String homeFeatureForecastMonthHint =
+      'home_feature_forecast_month_hint';
+  static const String homeFeatureForecastYearHint =
+      'home_feature_forecast_year_hint';
+  static const String homeFeatureVipChatHint = 'home_feature_vip_chat_hint';
   static const String profileManagerTitle = 'profile_manager_title';
   static const String profileCreateTitle = 'profile_create_title';
   static const String profileDetailTitle = 'profile_detail_title';
