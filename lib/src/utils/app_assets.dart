@@ -2,7 +2,7 @@ class AppAssets {
   AppAssets._();
 
   static const String iconsInputRequiredSvg =
-      'assets/images/icons/input_required.svg';
+      'assets/icons/input_required.svg';
   static const String iconsChevronDownSvg =
       'assets/images/icons/chevron down.svg';
   static const String iconsRadioCheckSvg =

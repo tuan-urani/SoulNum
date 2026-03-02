@@ -25,6 +25,8 @@ class AppInput extends StatefulWidget {
   final ValueChanged<String>? onChanged;
   final Color? fillColor;
   final Color? borderColor;
+  final Color? focusedBorderColor;
+  final Color? focusedLabelColor;
   final Color? obscureIconColor;
   final EdgeInsetsGeometry? contentPadding;
   final EdgeInsetsGeometry? prefixIconPadding;
@@ -52,6 +54,8 @@ class AppInput extends StatefulWidget {
     this.onChanged,
     this.fillColor,
     this.borderColor,
+    this.focusedBorderColor,
+    this.focusedLabelColor,
     this.obscureIconColor,
     this.contentPadding,
     this.prefixIconPadding,
@@ -84,14 +88,17 @@ class _AppInputState extends State<AppInput> {
     final bool isFocused = _focusNode.hasFocus;
 
     final Color enabledBorderColor =
-        widget.borderColor ?? AppColors.colorB8BCC6;
+        widget.borderColor ?? AppColors.authInputBorder;
+    final Color activeBorderColor =
+        widget.focusedBorderColor ?? AppColors.authAccentGold;
     final Color borderColor = isFocused
-        ? AppColors.primary
+        ? activeBorderColor
         : enabledBorderColor;
 
     final Color labelColor = isFocused
-        ? AppColors.primary
-        : AppColors.color667394;
+        ? widget.focusedLabelColor ?? AppColors.authAccentGold
+        : AppColors.authInputLabel;
+    final Color hintColor = AppColors.authTextMuted;
 
     final BorderRadius borderRadius = BorderRadius.circular(12);
 
@@ -134,11 +141,11 @@ class _AppInputState extends State<AppInput> {
           isCollapsed: true,
           hintText: widget.hint,
           hintStyle:
-              widget.hintTextStyle ?? AppStyles.bodyMedium(color: labelColor),
+              widget.hintTextStyle ?? AppStyles.bodyMedium(color: hintColor),
           border: InputBorder.none,
 
           filled: true,
-          fillColor: widget.fillColor ?? AppColors.white,
+          fillColor: widget.fillColor ?? AppColors.authInputBackground,
           contentPadding:
               widget.contentPadding ??
               const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -162,7 +169,7 @@ class _AppInputState extends State<AppInput> {
                         ? AppAssets.iconsHideEyeSvg
                         : AppAssets.iconsShowEyeSvg,
                     colorFilter: ColorFilter.mode(
-                      widget.obscureIconColor ?? AppColors.color1C274C,
+                      widget.obscureIconColor ?? AppColors.authTextMuted,
                       BlendMode.srcIn,
                     ),
                   ),
@@ -181,12 +188,12 @@ class _AppInputState extends State<AppInput> {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: borderRadius,
-            borderSide: BorderSide(color: borderColor, width: 1),
+            borderSide: BorderSide(color: borderColor, width: 1.2),
           ),
         ),
+        cursorColor: activeBorderColor,
         style:
-            widget.textStyle ??
-            AppStyles.bodyMedium(color: AppColors.color1D2410),
+            widget.textStyle ?? AppStyles.bodyMedium(color: AppColors.authText),
       ),
     );
   }

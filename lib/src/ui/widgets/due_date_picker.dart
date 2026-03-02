@@ -39,7 +39,10 @@ Future<void> showCupertinoDatePickerBottomSheet({
                   padding: 16.paddingHorizontal,
                   child: Text(
                     LocaleKey.widgetConfirm.tr,
-                    style: AppStyles.buttonMedium(fontWeight: FontWeight.w600),
+                    style: AppStyles.buttonMedium(
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.color9C27B0,
+                    ),
                   ),
                   onPressed: () {
                     Get.back();

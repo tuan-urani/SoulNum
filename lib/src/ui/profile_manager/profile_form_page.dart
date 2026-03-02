@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:soulnum/src/core/model/request/profile_upsert_request.dart';
@@ -9,6 +9,7 @@ import 'package:soulnum/src/ui/profile_manager/interactor/profile_manager_state.
 import 'package:soulnum/src/ui/widgets/app_button.dart';
 import 'package:soulnum/src/ui/widgets/app_input.dart';
 import 'package:soulnum/src/ui/widgets/app_screen_scaffold.dart';
+import 'package:soulnum/src/ui/widgets/due_date_picker.dart';
 import 'package:soulnum/src/utils/app_colors.dart';
 import 'package:soulnum/src/utils/app_pages.dart';
 import 'package:soulnum/src/utils/app_styles.dart';
@@ -31,6 +32,29 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
     _birthDateController.dispose();
     _relationController.dispose();
     super.dispose();
+  }
+
+  Future<void> _pickBirthDate() async {
+    FocusScope.of(context).unfocus();
+    final DateTime now = DateTime.now();
+    final DateTime initialDate =
+        DateTime.tryParse(_birthDateController.text.trim()) ??
+        DateTime(now.year - 20, now.month, now.day);
+
+    await showCupertinoDatePickerBottomSheet(
+      initialDateTime: initialDate,
+      minimumDate: DateTime(1900, 1, 1),
+      maximumDate: now,
+      onDateTimeChanged: (DateTime pickedDate) {
+        _birthDateController.text = _formatDate(pickedDate);
+      },
+    );
+  }
+
+  String _formatDate(DateTime value) {
+    final String month = value.month.toString().padLeft(2, '0');
+    final String day = value.day.toString().padLeft(2, '0');
+    return '${value.year}-$month-$day';
   }
 
   Future<void> _submit(ProfileManagerCubit cubit) async {
@@ -118,12 +142,19 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                   controller: _birthDateController,
                   hint: '1995-08-12',
                   isRequired: true,
+                  isDisabledTyping: true,
+                  onPressed: _pickBirthDate,
+                  suffixIcon: const Icon(
+                    CupertinoIcons.calendar,
+                    color: AppColors.authAccentGold,
+                    size: 20,
+                  ),
                 ),
-                12.height,
-                AppInput(
-                  label: LocaleKey.profileRelationLabel.tr,
-                  controller: _relationController,
-                ),
+                // 12.height,
+                // AppInput(
+                //   label: LocaleKey.profileRelationLabel.tr,
+                //   controller: _relationController,
+                // ),
                 20.height,
                 AppButton(
                   label: LocaleKey.commonSave.tr,
