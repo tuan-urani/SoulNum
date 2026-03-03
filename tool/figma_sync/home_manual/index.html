@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SoulNum Home Sync</title>
+  <style>
+    :root {
+      --bg: #090a14;
+      --surface: #111429;
+      --surface-strong: #17172a;
+      --border: #586aa6;
+      --text: #f6f7ff;
+      --muted: #bfc9de;
+      --gold: #bba46c;
+      --violet: #8f77ff;
+      --blue: #59aef9;
+      --green: #88cf66;
+      --orange: #ff8c42;
+      --amber: #f39702;
+      --red: #ef4056;
+      --day: #0095ff;
+      --yellow: #ffe53e;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Zen Maru Gothic", "Noto Sans", sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(143,119,255,.22), transparent 28%),
+        radial-gradient(circle at 18% 20%, rgba(187,164,108,.12), transparent 22%),
+        linear-gradient(180deg, #0a0b16 0%, #090a14 100%);
+      display: flex;
+      justify-content: center;
+      padding: 32px 20px;
+      color: var(--text);
+    }
+    .phone {
+      width: 390px;
+      min-height: 844px;
+      background: linear-gradient(180deg, rgba(19,26,41,.96), rgba(9,10,20,.98));
+      border: 1px solid rgba(88,106,166,.34);
+      border-radius: 34px;
+      box-shadow: 0 28px 70px rgba(0,0,0,.46);
+      overflow: hidden;
+      position: relative;
+    }
+    .glow {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% -10%, rgba(143,119,255,.18), transparent 28%),
+        radial-gradient(circle at 80% 8%, rgba(187,164,108,.12), transparent 22%);
+      pointer-events: none;
+    }
+    .content {
+      position: relative;
+      padding: 24px 18px 28px;
+    }
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: rgba(246,247,255,.88);
+      font-size: 12px;
+      margin-bottom: 14px;
+    }
+    .status-icons {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .pill-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(246,247,255,.88);
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+    .title-wrap h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: .2px;
+    }
+    .title-wrap p {
+      margin: 6px 0 0;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+    .orb {
+      width: 52px;
+      height: 52px;
+      border-radius: 999px;
+      border: 1px solid rgba(187,164,108,.35);
+      background: radial-gradient(circle at 35% 35%, rgba(187,164,108,.48), rgba(143,119,255,.18) 45%, rgba(17,20,41,.86) 75%);
+      box-shadow: 0 0 0 8px rgba(143,119,255,.05), 0 10px 30px rgba(0,0,0,.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: #fff1c5;
+    }
+    .card {
+      background: linear-gradient(180deg, rgba(23,23,42,.98), rgba(17,20,41,.98));
+      border: 1px solid rgba(88,106,166,.28);
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: 0 10px 26px rgba(0,0,0,.22);
+    }
+    .summary-card {
+      margin-bottom: 16px;
+      border-color: rgba(88,106,166,.34);
+    }
+    .summary-kicker {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .summary-kicker .label {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .summary-kicker .arrow {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      border: 1px solid rgba(187,164,108,.24);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+      font-size: 14px;
+      background: rgba(187,164,108,.08);
+    }
+    .summary-name {
+      font-size: 15px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .summary-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .2px;
+      border: 1px solid rgba(132,201,63,.28);
+      background: rgba(132,201,63,.10);
+      color: #99da59;
+    }
+    .summary-sub {
+      border-color: rgba(187,164,108,.28);
+      background: rgba(187,164,108,.08);
+      color: var(--gold);
+    }
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 6px 2px 12px;
+    }
+    .section-title h2 {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 700;
+      color: rgba(246,247,255,.96);
+    }
+    .section-title span {
+      font-size: 11px;
+      color: rgba(191,201,222,.72);
+      text-transform: uppercase;
+      letter-spacing: .7px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .tile {
+      min-height: 166px;
+      padding: 12px;
+      border-radius: 18px;
+      background: var(--surface);
+      border: 1px solid rgba(88,106,166,.18);
+      box-shadow: 0 10px 24px rgba(0,0,0,.18);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .tile-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .icon-box {
+      width: 30px;
+      height: 30px;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      border: 1px solid rgba(255,255,255,.18);
+    }
+    .symbol {
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .2px;
+      border: 1px solid rgba(255,255,255,.18);
+    }
+    .tile h3 {
+      margin: 0 0 6px;
+      font-size: 16px;
+      line-height: 1.25;
+      font-weight: 700;
+      color: #fff;
+    }
+    .tile p {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.35;
+      color: var(--muted);
+      min-height: 48px;
+    }
+    .tile-bottom {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+    .chip {
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 700;
+      border: 1px solid currentColor;
+      background: rgba(255,255,255,.02);
+    }
+    .gold { color: var(--gold); background: rgba(187,164,108,.10); border-color: rgba(187,164,108,.35); }
+    .violet { color: var(--violet); background: rgba(143,119,255,.12); border-color: rgba(143,119,255,.35); }
+    .blue { color: var(--blue); background: rgba(89,174,249,.12); border-color: rgba(89,174,249,.35); }
+    .green { color: var(--green); background: rgba(136,207,102,.12); border-color: rgba(136,207,102,.35); }
+    .orange { color: var(--orange); background: rgba(255,140,66,.12); border-color: rgba(255,140,66,.35); }
+    .amber { color: var(--amber); background: rgba(243,151,2,.12); border-color: rgba(243,151,2,.35); }
+    .red { color: var(--red); background: rgba(239,64,86,.12); border-color: rgba(239,64,86,.35); }
+    .day { color: var(--day); background: rgba(0,149,255,.12); border-color: rgba(0,149,255,.35); }
+    .yellow { color: var(--yellow); background: rgba(255,229,62,.12); border-color: rgba(255,229,62,.35); }
+    .footer-space { height: 12px; }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="glow"></div>
+    <div class="content">
+      <div class="status-bar">
+        <span>9:41</span>
+        <div class="status-icons">
+          <span class="pill-dot"></span><span class="pill-dot"></span><span class="pill-dot"></span>
+        </div>
+      </div>
+
+      <div class="header">
+        <div class="title-wrap">
+          <h1>Trang chủ</h1>
+          <p>Khám phá các chỉ số thần số học và hành trình nội tâm của bạn.</p>
+        </div>
+        <div class="orb">09</div>
+      </div>
+
+      <div class="card summary-card">
+        <div class="summary-kicker">
+          <div class="label">Tóm tắt hồ sơ đang dùng</div>
+          <div class="arrow">→</div>
+        </div>
+        <div class="summary-name">Nguyễn Phương Anh</div>
+        <div class="summary-meta">
+          <div class="badge">● Miễn phí</div>
+          <div class="badge summary-sub">Hồ sơ đang dùng</div>
+        </div>
+      </div>
+
+      <div class="section-title">
+        <h2>Khám phá nhanh</h2>
+        <span>13 mục</span>
+      </div>
+
+      <div class="grid">
+        <div class="tile"><div><div class="tile-top"><div class="icon-box gold">◉</div><div class="symbol gold">00</div></div><h3>Tóm tắt hồ sơ đang dùng</h3><p>Xem nhanh hồ sơ hiện tại và chuyển hồ sơ đang dùng.</p></div><div class="tile-bottom"><div class="chip gold">Truy cập</div></div></div>
+        <div class="tile"><div><div class="tile-top"><div class="icon-box gold">✦</div><div class="symbol gold">1</div></div><h3>Con số cốt lõi</h3><p>Giải mã đường đời, sứ mệnh và bản chất cốt lõi của bạn.</p></div><div class="tile-bottom"><div class="chip gold">Miễn phí</div></div></div>
+        <div class="tile"><div><div class="tile-top"><div class="icon-box violet">#</div><div class="symbol violet">3-6-9</div></div><h3>Ma trận tâm lý</h3><p>Phân tích ma trận tâm lý theo các cụm năng lượng chính.</p></div><div class="tile-bottom"><div class="chip violet">Chi tiết</div></div></div>
+        <div class="tile"><div><div class="tile-top"><div class="icon-box blue">✺</div><div class="symbol blue">1-9</div></div><h3>Biểu đồ ngày sinh</h3><p>Đọc biểu đồ ngày sinh để nhận ra tiềm năng nổi bật.</p></div><div class="tile-bottom"><div class="chip blue">Biểu đồ</div></div></div>
+        <div class="tile"><div><div class="tile-top"><div class="icon-box green">⚡</div><div class="symbol green">8</div></div><h3>Năng lượng gia tăng</h3><p>Xác định điểm mạnh và vùng năng lượng cần cân bằng.</p></div><div class="tile-bottom"><div class="chip green">Tối ưu</div></div></div>
+        <div class="tile"><div><div class="tile-top"><div class="icon-box orange">♥</div><div class="symbol orange">2</div></div><h3>Chỉ số tương hợp</h3><p>Đánh giá độ hòa hợp giữa hai hồ sơ người dùng.</p></div><div class="tile-bottom"><div class="chip orange">So khớp</div></div></div>
+        <div class="tile"><div><div class="tile-top"><div class="icon-box amber">△</div><div class="symbol amber">4</div></div><h3>4 đỉnh cao</h3><p>Theo dõi 4 giai đoạn đỉnh cao quan trọng trong cuộc đời.</p></div><div class="tile-bottom"><div class="chip amber">Chu kỳ</div></div></div>
+        <div class="tile"><div><div class="tile-top"><div class="icon-box red">⛨</div><div class="symbol red">4</div></div><h3>4 thử thách</h3><p>Nhận diện 4 thử thách lớn và hướng vượt qua phù hợp.</p></div><div class="tile-bottom"><div class="chip red">Bài học</div></div></div>
+        <div class="tile"><div><div class="tile-top"><div class="icon-box day">◌</div><div class="symbol day">24H</div></div><h3>Chu kỳ sinh học</h3><p>Cập nhật nhịp sinh học hằng ngày để chủ động kế hoạch.</p></div><div class="tile-bottom"><div class="chip day">Quảng cáo</div></div></div>
+        <div class="tile"><div><div class="tile-top"><div class="icon-box blue">D</div><div class="symbol blue">D</div></div><h3>Dự đoán ngày</h3><p>Dự đoán xu hướng năng lượng và trọng tâm của hôm nay.</p></div><div class="tile-bottom"><div class="chip blue">Hôm nay</div></div></div>
+        <div class="tile"><div><div class="tile-top"><div class="icon-box violet">M</div><div class="symbol violet">M</div></div><h3>Dự đoán tháng</h3><p>Dự đoán nhịp phát triển và cơ hội của tháng hiện tại.</p></div><div class="tile-bottom"><div class="chip violet">Tháng này</div></div></div>
+        <div class="tile"><div><div class="tile-top"><div class="icon-box gold">Y</div><div class="symbol gold">Y</div></div><h3>Dự đoán năm</h3><p>Dự đoán bức tranh tổng quan theo chu kỳ cả năm.</p></div><div class="tile-bottom"><div class="chip gold">Năm nay</div></div></div>
+        <div class="tile"><div><div class="tile-top"><div class="icon-box yellow">AI</div><div class="symbol yellow">AI</div></div><h3>AI Chatbot VIP</h3><p>Trò chuyện AI chuyên sâu để hiểu rõ bản thân hơn.</p></div><div class="tile-bottom"><div class="chip yellow">VIP Pro</div></div></div>
+      </div>
+      <div class="footer-space"></div>
+    </div>
+  </div>
+</body>
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</html>

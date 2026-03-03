@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SoulNum Profile Manager Sync</title>
+  <style>
+    :root {
+      --bg-top: #0f1020;
+      --bg-bottom: #0a0a14;
+      --surface: #17172a;
+      --border: rgba(88,106,166,.25);
+      --text: #ffffff;
+      --muted: #bfc9de;
+      --green: #84c93f;
+      --gold: #bba46c;
+      --violet: #8f77ff;
+      --button-dark: #151b34;
+      --button-border: #3a4373;
+    }
+    * { box-sizing: border-box; }
+    body { margin:0; min-height:100vh; display:flex; justify-content:center; padding:32px 20px; font-family:"Zen Maru Gothic","Noto Sans",sans-serif; background:#090a14; color:var(--text); }
+    .phone { width:390px; min-height:844px; background: linear-gradient(180deg, var(--bg-top), var(--bg-bottom)); border-radius:34px; overflow:hidden; border:1px solid rgba(58,67,115,.36); box-shadow:0 28px 70px rgba(0,0,0,.52); position:relative; }
+    .header { height:92px; padding:22px 20px 14px; display:flex; align-items:flex-end; gap:14px; background:#000; }
+    .back { width:34px; height:34px; border-radius:999px; border:1px solid rgba(255,255,255,.12); display:flex; align-items:center; justify-content:center; color:#fff; font-size:16px; }
+    .title { font-size:22px; font-weight:700; }
+    .content { padding:16px; padding-bottom:110px; }
+    .stack { display:flex; flex-direction:column; gap:12px; }
+    .card { background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:16px; box-shadow:0 10px 24px rgba(0,0,0,.18); }
+    .name { font-size:20px; font-weight:700; line-height:1.2; }
+    .meta { margin-top:6px; font-size:13px; color:var(--muted); }
+    .active { margin-top:8px; color:var(--green); font-size:12px; font-weight:600; }
+    .add-btn { margin-top:12px; height:48px; border-radius:14px; background: linear-gradient(135deg, var(--gold), #cfb782); color:#111425; display:flex; align-items:center; justify-content:center; font-weight:700; }
+    .logout-wrap { position:absolute; left:0; right:0; bottom:0; background:rgba(10,10,20,.96); padding:8px 16px 16px; }
+    .logout { height:48px; border-radius:14px; border:1px solid var(--button-border); background:var(--button-dark); color:var(--text); display:flex; align-items:center; justify-content:center; font-weight:600; }
+  </style>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</head>
+<body>
+  <main class="phone">
+    <header class="header">
+      <div class="back">←</div>
+      <div class="title">Quản lý hồ sơ</div>
+    </header>
+    <section class="content">
+      <div class="stack">
+        <div class="card">
+          <div class="name">Nguyễn Minh Anh</div>
+          <div class="meta">Ngày sinh (YYYY-MM-DD): 1997-08-12</div>
+          <div class="active">Hồ sơ đang dùng</div>
+        </div>
+        <div class="card">
+          <div class="name">Trần Quốc Bảo</div>
+          <div class="meta">Ngày sinh (YYYY-MM-DD): 1993-03-21</div>
+        </div>
+        <div class="card">
+          <div class="name">Lê Thu Hà</div>
+          <div class="meta">Ngày sinh (YYYY-MM-DD): 2001-11-05</div>
+        </div>
+      </div>
+      <div class="add-btn">Tạo hồ sơ mới</div>
+    </section>
+    <div class="logout-wrap">
+      <div class="logout">Đăng xuất</div>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SoulNum Compatibility Sync</title>
+  <style>
+    :root {
+      --bg-top:#0f1020; --bg-bottom:#0a0a14; --surface:#111429; --input:#121730; --input-border:#37406f; --text:#fff; --muted:#bfc9de; --muted2:#dfe4f5; --soft:#f2f4f7;
+      --violet:#8f77ff; --blue:#59aef9; --gold:#bba46c; --line:rgba(177,184,209,.2); --soft-line:rgba(88,106,166,.24);
+    }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; display:flex; justify-content:center; padding:32px 20px; font-family:"Zen Maru Gothic","Noto Sans",sans-serif; background:#090a14; color:var(--text); }
+    .phone { width:390px; min-height:844px; background:linear-gradient(180deg,var(--bg-top),var(--bg-bottom)); border-radius:34px; overflow:hidden; border:1px solid rgba(58,67,115,.36); box-shadow:0 28px 70px rgba(0,0,0,.52); }
+    .header { height:92px; padding:22px 20px 14px; display:flex; align-items:flex-end; gap:14px; background:#000; }
+    .back { width:34px; height:34px; border-radius:999px; border:1px solid rgba(255,255,255,.12); display:flex; align-items:center; justify-content:center; color:#fff; font-size:16px; }
+    .title { font-size:22px; font-weight:700; }
+    .content { padding:16px; }
+    .field { display:flex; flex-direction:column; gap:8px; margin-bottom:12px; }
+    .label { font-size:12px; color:#d4d9f6; }
+    .select { border-radius:16px; border:1px solid var(--input-border); background:var(--input); padding:17px 14px; color:var(--text); display:flex; align-items:center; justify-content:space-between; }
+    .run { height:48px; border-radius:14px; background:linear-gradient(135deg, var(--gold), #cfb782); color:#111425; display:flex; align-items:center; justify-content:center; font-weight:700; margin-bottom:16px; }
+    .card { background:var(--surface); border-radius:20px; border:1px solid var(--line); padding:12px; }
+    .head { border:1px solid var(--soft-line); border-radius:14px; padding:10px 12px; background:linear-gradient(180deg, rgba(28,39,76,.95), rgba(19,26,41,.9)); }
+    .head h2 { margin:0; font-size:18px; line-height:1.3; color:var(--soft); font-weight:600; }
+    .head p { margin:4px 0 0; font-size:12px; color:rgba(191,201,222,.78); }
+    .block { margin-top:10px; border-radius:14px; padding:12px; background:rgba(19,26,41,.88); border:1px solid rgba(177,184,209,.22); }
+    .block.highlight { border:1px solid rgba(88,106,166,.38); background:linear-gradient(135deg, rgba(143,119,255,.22), rgba(89,174,249,.15)); }
+    .block h3 { margin:0; font-size:16px; line-height:1.33; font-weight:700; color:var(--muted2); }
+    .block p { margin:4px 0 0; font-size:14px; line-height:1.32; color:var(--muted); }
+  </style>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</head>
+<body>
+  <main class="phone">
+    <header class="header"><div class="back">←</div><div class="title">Chỉ số tương hợp</div></header>
+    <section class="content">
+      <div class="field"><div class="label">Chọn hồ sơ thứ nhất</div><div class="select"><span>Nguyễn Minh Anh</span><span>▾</span></div></div>
+      <div class="field"><div class="label">Chọn hồ sơ thứ hai</div><div class="select"><span>Trần Quốc Bảo</span><span>▾</span></div></div>
+      <div class="run">Chạy phân tích tương hợp</div>
+      <div class="card">
+        <div class="head"><h2>Mức độ tương hợp giữa Minh Anh và Quốc Bảo</h2><p>Điểm vào từ Home: "Chỉ số tương hợp"</p></div>
+        <div class="block highlight"><h3>Tổng quan tương hợp</h3><p>Hai bạn có nền năng lượng bổ trợ tốt: một bên thiên về chiều sâu cảm xúc, bên còn lại mang lại nhịp hành động và sự rõ ràng trong thực tế.</p></div>
+        <div class="block"><h3>Vùng hòa hợp</h3><p>Dễ đồng hành trong những việc cần sự tin cậy, lắng nghe và xây dựng định hướng dài hạn. Khi cùng thống nhất mục tiêu, mối quan hệ có sức bền tốt.</p></div>
+        <div class="block"><h3>Vùng cần lưu ý</h3><p>Sự khác biệt về tốc độ ra quyết định có thể tạo áp lực. Một người muốn cảm đủ trước khi hành động, người kia lại muốn chốt nhanh để tiến lên.</p></div>
+        <div class="block"><h3>Nguyên tắc phối hợp</h3><p>Rõ vai trò, tôn trọng nhịp cá nhân và dành thời gian phản hồi định kỳ sẽ giúp mối quan hệ phát triển lành mạnh hơn.</p></div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

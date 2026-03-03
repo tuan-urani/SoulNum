@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SoulNum Splash Sync</title>
+  <style>
+    :root {
+      --bg: #090a14;
+      --bg-surface: #111429;
+      --text: #f6f7ff;
+      --muted: #aab0d5;
+      --gold: #bba46c;
+      --violet: #8f77ff;
+      --panel: rgba(23,27,51,.95);
+      --border: rgba(42,49,88,.74);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 32px 20px;
+      font-family: "Zen Maru Gothic", "Noto Sans", sans-serif;
+      color: var(--text);
+      background: linear-gradient(180deg, #090a14 0%, #111429 58%, #000000 100%);
+    }
+    .phone {
+      width: 390px;
+      min-height: 844px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 34px;
+      border: 1px solid rgba(58,67,115,.36);
+      background: linear-gradient(180deg, #090a14 0%, #111429 58%, #000000 100%);
+      box-shadow: 0 28px 70px rgba(0,0,0,.52);
+    }
+    .glow {
+      position: absolute;
+      border-radius: 999px;
+      pointer-events: none;
+      filter: blur(6px);
+    }
+    .glow.top {
+      width: 220px;
+      height: 220px;
+      right: -24px;
+      top: -50px;
+      background: rgba(143,119,255,.22);
+      box-shadow: 0 0 70px 10px rgba(143,119,255,.22);
+    }
+    .glow.bottom {
+      width: 180px;
+      height: 180px;
+      left: -60px;
+      bottom: 60px;
+      background: rgba(187,164,108,.14);
+      box-shadow: 0 0 70px 10px rgba(187,164,108,.14);
+    }
+    .content {
+      position: relative;
+      min-height: 844px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .orb-wrap {
+      position: relative;
+      width: 228px;
+      height: 228px;
+      margin-bottom: 28px;
+    }
+    .orb {
+      position: absolute;
+      inset: 0;
+      border-radius: 999px;
+      background: radial-gradient(circle at 50% 45%, rgba(17,20,41,.92), rgba(9,10,20,.84));
+      border: 1px solid rgba(187,164,108,.32);
+      box-shadow: 0 0 42px 8px rgba(143,119,255,.18);
+    }
+    .ring {
+      position: absolute;
+      border-radius: 999px;
+      border: 1px solid rgba(187,164,108,.18);
+    }
+    .ring.r1 { inset: 18px; }
+    .ring.r2 { inset: 42px; border-color: rgba(143,119,255,.18); }
+    .ring.r3 { inset: 72px; }
+    .center-core {
+      position: absolute;
+      inset: 80px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, rgba(187,164,108,.34), rgba(143,119,255,.16) 44%, rgba(17,20,41,.94) 76%);
+      border: 1px solid rgba(187,164,108,.24);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      color: #fff1c6;
+      box-shadow: 0 0 30px rgba(187,164,108,.18);
+    }
+    .num {
+      position: absolute;
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 1px solid rgba(88,106,166,.34);
+      background: rgba(17,20,41,.92);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .n1 { top: 8px; left: 97px; }
+    .n2 { top: 40px; right: 26px; }
+    .n3 { top: 97px; right: 8px; }
+    .n4 { bottom: 40px; right: 26px; }
+    .n5 { bottom: 8px; left: 97px; }
+    .n6 { bottom: 40px; left: 26px; }
+    .n7 { top: 97px; left: 8px; }
+    .n8 { top: 40px; left: 26px; }
+    h1 {
+      margin: 0;
+      font-size: 42px;
+      line-height: 1.05;
+      font-weight: 700;
+      letter-spacing: .2px;
+    }
+    p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.45;
+      max-width: 260px;
+    }
+    .loading {
+      margin-top: auto;
+      margin-bottom: 24px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      border: 2px solid rgba(187,164,108,.18);
+      border-top-color: var(--gold);
+    }
+  </style>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</head>
+<body>
+  <main class="phone">
+    <div class="glow top"></div>
+    <div class="glow bottom"></div>
+    <section class="content">
+      <div class="orb-wrap">
+        <div class="orb"></div>
+        <div class="ring r1"></div>
+        <div class="ring r2"></div>
+        <div class="ring r3"></div>
+        <div class="center-core">✦</div>
+        <div class="num n1">1</div>
+        <div class="num n2">2</div>
+        <div class="num n3">3</div>
+        <div class="num n4">4</div>
+        <div class="num n5">5</div>
+        <div class="num n6">6</div>
+        <div class="num n7">7</div>
+        <div class="num n8">8</div>
+      </div>
+      <h1>SoulNum</h1>
+      <p>Đang khởi tạo hành trình thần số học...</p>
+      <div class="loading">
+        <div class="spinner"></div>
+        <span>Đang tải...</span>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

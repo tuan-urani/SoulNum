@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SoulNum Register Sync</title>
+  <style>
+    :root {
+      --border: #2a3158;
+      --input-bg: #121730;
+      --input-border: #37406f;
+      --text: #f6f7ff;
+      --muted: #aab0d5;
+      --label: #d4d9f6;
+      --gold: #bba46c;
+      --violet: #8f77ff;
+      --button-text: #111425;
+      --danger: #ef4056;
+      --danger-soft: rgba(239, 64, 86, 0.1);
+      --helper-border: #3b4a7f;
+      --helper-bg: rgba(18, 23, 48, 0.9);
+      --helper-text: #b9c2ec;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 32px 20px;
+      font-family: "Zen Maru Gothic", "Noto Sans", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(143,119,255,.18), transparent 28%),
+        radial-gradient(circle at bottom left, rgba(187,164,108,.14), transparent 24%),
+        linear-gradient(180deg, #0b0c17 0%, #090a14 100%);
+    }
+    .phone {
+      width: 390px;
+      min-height: 844px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 34px;
+      border: 1px solid rgba(58,67,115,.42);
+      background: linear-gradient(180deg, rgba(17,20,41,.98), rgba(9,10,20,.98));
+      box-shadow: 0 28px 70px rgba(0,0,0,.52);
+    }
+    .glow {
+      position: absolute;
+      border-radius: 999px;
+      filter: blur(3px);
+      pointer-events: none;
+    }
+    .glow-violet {
+      width: 170px;
+      height: 170px;
+      right: -36px;
+      top: -44px;
+      background: rgba(143,119,255,.22);
+      box-shadow: 0 0 42px 12px rgba(143,119,255,.22);
+    }
+    .glow-gold {
+      width: 180px;
+      height: 180px;
+      left: -45px;
+      bottom: -45px;
+      background: rgba(187,164,108,.16);
+      box-shadow: 0 0 42px 12px rgba(187,164,108,.16);
+    }
+    .content {
+      position: relative;
+      min-height: 844px;
+      padding: 28px 24px 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 24px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-mark {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--gold), var(--violet));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--button-text);
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: .3px;
+      box-shadow: 0 12px 28px rgba(0,0,0,.28);
+    }
+    .brand-copy { display: flex; flex-direction: column; gap: 3px; }
+    .brand-copy h1 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.1;
+      font-weight: 700;
+    }
+    .brand-copy p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.4;
+      color: var(--muted);
+    }
+    .panel {
+      border-radius: 22px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(23,27,51,.92), rgba(15,20,39,.92));
+      padding: 20px;
+      box-shadow: 0 16px 44px rgba(0,0,0,.26);
+      backdrop-filter: blur(10px);
+    }
+    .panel h2 {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.15;
+      font-weight: 700;
+    }
+    .intro {
+      margin: 8px 0 0;
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+    .fields {
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .field label {
+      font-size: 12px;
+      line-height: 1.2;
+      color: var(--label);
+      font-weight: 500;
+    }
+    .input {
+      width: 100%;
+      border-radius: 16px;
+      border: 1px solid var(--input-border);
+      background: var(--input-bg);
+      padding: 17px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.3;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.01);
+    }
+    .placeholder { color: var(--muted); }
+    .eye { color: var(--muted); font-size: 14px; }
+    .error {
+      margin-top: 12px;
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid var(--danger);
+      background: var(--danger-soft);
+      font-size: 12px;
+      line-height: 1.45;
+      color: var(--text);
+    }
+    .btn {
+      margin-top: 12px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: .1px;
+      background: var(--gold);
+      color: var(--button-text);
+      box-shadow: 0 14px 30px rgba(187,164,108,.18);
+    }
+    .helper-card {
+      margin-top: 12px;
+      border-radius: 10px;
+      border: 1px solid var(--helper-border);
+      background: var(--helper-bg);
+      padding: 10px;
+      color: var(--helper-text);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .bottom-inline {
+      margin-top: 12px;
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+      flex-wrap: wrap;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .bottom-inline .muted { color: var(--muted); }
+    .bottom-inline .link {
+      color: var(--gold);
+      font-weight: 600;
+    }
+  </style>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</head>
+<body>
+  <main class="phone">
+    <div class="glow glow-violet"></div>
+    <div class="glow glow-gold"></div>
+    <section class="content">
+      <header class="brand">
+        <div class="brand-mark">SN</div>
+        <div class="brand-copy">
+          <h1>SoulNum</h1>
+          <p>Hành trình khám phá bắt đầu</p>
+        </div>
+      </header>
+
+      <section class="panel">
+        <h2>Đăng ký</h2>
+        <p class="intro">Tạo tài khoản bằng email để lưu hồ sơ và đồng bộ dữ liệu thần số học an toàn.</p>
+
+        <div class="fields">
+          <div class="field">
+            <label>Email</label>
+            <div class="input placeholder">you@example.com</div>
+          </div>
+
+          <div class="field">
+            <label>Mật khẩu</label>
+            <div class="input">
+              <span>••••••••••</span>
+              <span class="eye">Hiện</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Xác nhận mật khẩu</label>
+            <div class="input">
+              <span>••••••••••</span>
+              <span class="eye">Hiện</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="error">Email này đã được sử dụng. Vui lòng đăng nhập hoặc dùng email khác.</div>
+
+        <div class="btn">Tạo tài khoản</div>
+
+        <div class="helper-card">Mật khẩu nên gồm chữ hoa, chữ thường, số và ký tự đặc biệt để bảo mật tài khoản tốt hơn.</div>
+
+        <div class="bottom-inline">
+          <span class="muted">Đã có tài khoản?</span>
+          <span class="link">Đăng nhập ngay</span>
+        </div>
+      </section>
+    </section>
+  </main>
+</body>
+</html>

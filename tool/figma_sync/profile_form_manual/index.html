@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SoulNum Profile Form Sync</title>
+  <style>
+    :root {
+      --bg-top: #0f1020;
+      --bg-bottom: #0a0a14;
+      --input-bg: #121730;
+      --input-border: #37406f;
+      --label: #d4d9f6;
+      --text: #f6f7ff;
+      --muted: #aab0d5;
+      --gold: #bba46c;
+    }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; display:flex; justify-content:center; padding:32px 20px; font-family:"Zen Maru Gothic","Noto Sans",sans-serif; background:#090a14; color:var(--text); }
+    .phone { width:390px; min-height:844px; background: linear-gradient(180deg, var(--bg-top), var(--bg-bottom)); border-radius:34px; overflow:hidden; border:1px solid rgba(58,67,115,.36); box-shadow:0 28px 70px rgba(0,0,0,.52); }
+    .header { height:92px; padding:22px 20px 14px; display:flex; align-items:flex-end; gap:14px; background:#000; }
+    .back { width:34px; height:34px; border-radius:999px; border:1px solid rgba(255,255,255,.12); display:flex; align-items:center; justify-content:center; color:#fff; font-size:16px; }
+    .title { font-size:22px; font-weight:700; }
+    .content { padding:16px; }
+    h2 { margin:0 0 16px; font-size:24px; font-weight:700; }
+    .field { display:flex; flex-direction:column; gap:8px; margin-bottom:12px; }
+    label { font-size:12px; color:var(--label); font-weight:500; }
+    .required::after { content:" *"; color:#ef4056; }
+    .input { border-radius:16px; border:1px solid var(--input-border); background:var(--input-bg); padding:17px 14px; color:var(--text); font-size:15px; display:flex; align-items:center; justify-content:space-between; }
+    .placeholder { color:var(--muted); }
+    .calendar { color:var(--gold); font-size:18px; }
+    .save { margin-top:20px; height:48px; border-radius:14px; background: linear-gradient(135deg, var(--gold), #cfb782); color:#111425; display:flex; align-items:center; justify-content:center; font-weight:700; }
+  </style>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</head>
+<body>
+  <main class="phone">
+    <header class="header">
+      <div class="back">←</div>
+      <div class="title">Tạo hồ sơ</div>
+    </header>
+    <section class="content">
+      <h2>Tạo hồ sơ</h2>
+      <div class="field">
+        <label class="required">Họ và tên</label>
+        <div class="input">Nguyễn Minh Anh</div>
+      </div>
+      <div class="field">
+        <label class="required">Ngày sinh (YYYY-MM-DD)</label>
+        <div class="input placeholder">
+          <span>1995-08-12</span>
+          <span class="calendar">📅</span>
+        </div>
+      </div>
+      <div class="save">Lưu</div>
+    </section>
+  </main>
+</body>
+</html>

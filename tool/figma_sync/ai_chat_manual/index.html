@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SoulNum AI Chat Sync</title>
+  <style>
+    :root {
+      --bg-top:#0f1020; --bg-bottom:#0a0a14; --surface:#111429; --card:#17172a; --input:#121730; --input-border:#37406f;
+      --text:#fff; --muted:#bfc9de; --muted2:#dfe4f5; --gold:#bba46c; --green:#84c93f; --primary:#84c93f; --line:rgba(88,106,166,.26);
+    }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; display:flex; justify-content:center; padding:32px 20px; font-family:"Zen Maru Gothic","Noto Sans",sans-serif; background:#090a14; color:var(--text); }
+    .phone { width:390px; min-height:844px; background:linear-gradient(180deg,var(--bg-top),var(--bg-bottom)); border-radius:34px; overflow:hidden; border:1px solid rgba(58,67,115,.36); box-shadow:0 28px 70px rgba(0,0,0,.52); }
+    .header { height:92px; padding:22px 20px 14px; display:flex; align-items:flex-end; gap:14px; background:#000; }
+    .back { width:34px; height:34px; border-radius:999px; border:1px solid rgba(255,255,255,.12); display:flex; align-items:center; justify-content:center; color:#fff; font-size:16px; }
+    .title { font-size:22px; font-weight:700; }
+    .content { padding:16px; display:flex; flex-direction:column; gap:8px; height:calc(844px - 92px); }
+    .info { background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:10px 12px; }
+    .info h3 { margin:0; font-size:15px; font-weight:700; color:#f2f4f7; }
+    .info p { margin:6px 0 0; font-size:14px; line-height:1.4; color:var(--muted); white-space:pre-line; }
+    .quota .progress { margin-top:8px; height:8px; border-radius:999px; background:rgba(88,106,166,.22); overflow:hidden; }
+    .quota .bar { width:60%; height:100%; background:var(--primary); }
+    .thread { flex:1; min-height:0; background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:10px; display:flex; flex-direction:column; gap:8px; }
+    .bubble { max-width:310px; border-radius:14px; padding:12px; border:1px solid rgba(88,106,166,.28); background:var(--surface); }
+    .bubble.user { align-self:flex-end; background:rgba(132,201,63,.16); border-color:rgba(132,201,63,.45); }
+    .bubble .role { font-size:11px; font-weight:600; }
+    .bubble.user .role { color:#111425; }
+    .bubble.assistant .role { color:var(--gold); }
+    .bubble .text { margin-top:6px; font-size:14px; line-height:1.4; color:var(--muted); }
+    .bubble.user .text { color:var(--text); }
+    .bubble .time { margin-top:6px; font-size:11px; color:rgba(191,201,222,.75); }
+    .inputbar { display:flex; gap:8px; }
+    .input { flex:1; min-height:66px; border-radius:16px; border:1px solid var(--input-border); background:var(--input); padding:14px; color:var(--muted); font-size:14px; line-height:1.35; }
+    .send { width:116px; height:66px; border-radius:14px; background:var(--primary); color:#111425; display:flex; align-items:center; justify-content:center; font-weight:700; }
+  </style>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</head>
+<body>
+  <main class="phone">
+    <header class="header"><div class="back">←</div><div class="title">AI Chatbot</div></header>
+    <section class="content">
+      <div class="info"><h3>Ngữ cảnh hồ sơ đang dùng</h3><p>Nguyễn Minh Anh
+Ngày sinh: 12/08/1997</p></div>
+      <div class="info quota"><h3>Hạn mức còn lại trong tháng</h3><p>Lượt chat còn lại: 6/10</p><div class="progress"><div class="bar"></div></div></div>
+      <div class="thread">
+        <div class="bubble assistant"><div class="role">AI Chatbot</div><div class="text">Mình đã sẵn sàng. Bạn muốn đào sâu về đường đời, tình cảm hay định hướng năm nay?</div><div class="time">19:58</div></div>
+        <div class="bubble user"><div class="role">Bạn</div><div class="text">Hãy giải thích vì sao mình hay suy nghĩ nhiều trước khi hành động.</div><div class="time">19:59</div></div>
+        <div class="bubble assistant"><div class="role">AI Chatbot</div><div class="text">Với cấu trúc thần số học hiện tại, bạn thiên về quan sát và nội phân tích. Điểm mạnh là nhìn sâu, nhưng điểm cần cân bằng là chuyển insight thành quyết định cụ thể.</div><div class="time">19:59</div></div>
+      </div>
+      <div class="inputbar"><div class="input">Đặt câu hỏi để hiểu sâu hơn về bản thân...</div><div class="send">Gửi</div></div>
+    </section>
+  </main>
+</body>
+</html>
